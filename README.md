@@ -42,7 +42,7 @@ To dive into **DCHALIOS** and explore its AI capabilities:
 
 4. **Start the Development Server**:
     ```bash
-    npm start
+    npm run dev
     ```
 
 5. **Access the Application**:
@@ -70,7 +70,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## **Contact** 📧
 
-For questions, feedback, or additional information about **DCHALIOS**, please contact [your email] or open an issue in the repository.
+For questions, feedback, or additional information about **DCHALIOS**, please contact dps2k811@gmail.com or open an issue in the repository.
 
 ---
 
