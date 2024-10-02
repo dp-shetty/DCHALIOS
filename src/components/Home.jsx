@@ -176,7 +176,7 @@ function Home() {
         >
           <ContentDisplay finalContent={finalContent} />
           {isLoading && (
-            <p className="text-gray-600 p-4 mob:p-2">Generating content...</p>
+            <p className="text-gray-600 p-4 mob:p-2">Generating your  content...</p>
           )}
         </div>
         <footer className="flex items-center p-3 bg-white border border-gray-300 rounded-full shadow-md mt-4 mx-4 h-14 mb-5 mob:w-full mob:mx-auto mob:p-2 mob:h-11">
