@@ -8,7 +8,7 @@ import ContentDisplay from "./ContentDisplay";
 import HistoryList from "./HistoryList";
 
 function Home() {
-  const apiKey = import.meta.env.VITE_API_KEY;
+  const apiKey = import.meta.env.VITE_GOOGLE;
   const [genAI, setGenAI] = useState(null);
   const [model, setModel] = useState(null);
   const [inputQuery, setInputQuery] = useState("");
