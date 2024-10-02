@@ -171,7 +171,7 @@ function Home() {
           />
         </header>
         <div
-          className="mx-4 mt-4 overflow-y-auto rounded-lg shadow-md bg-gray-50 p-4 mob:mx-1"
+          className="flex-1 mx-4 mt-4 overflow-y-auto rounded-lg shadow-md bg-gray-50 p-4 mob:mx-1"
           ref={outputRef}
         >
           <ContentDisplay finalContent={finalContent} />
