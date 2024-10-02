@@ -1,10 +1,10 @@
 import React from 'react'
-import SpeechComponent from './components/SpeechRec/SpeechComponent'
+import Home from './components/home'
 
 function App() {
   return (
     <>
-      <SpeechComponent/>
+    <Home/>
     </>
   )
 }
