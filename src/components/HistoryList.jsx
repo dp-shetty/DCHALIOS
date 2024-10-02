@@ -19,7 +19,7 @@ const HistoryList = ({ history, onEdit, onDelete, onShare, onView }) => {
   return (
     <div className="h-full overflow-y-auto bg-gray-800 rounded-lg p-2">
       {history.map((item, index) => (
-        <div key={index} className="relative group">
+        <div key={index} className="relative">
           <div
             className="flex justify-between items-center text-gray-400 p-2 hover:bg-gray-700 rounded transition duration-200 cursor-pointer"
             onClick={() => {
