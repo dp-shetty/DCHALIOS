@@ -21,7 +21,7 @@ const ContentDisplay = React.memo(({ finalContent }) => {
     return <p className="text-gray-600">{content}</p>;
   };
 
-  return <div className="p-4">{beautifyContent(finalContent)}</div>;
+  return <div className="p-4 mob:p-0">{beautifyContent(finalContent)}</div>;
 });
 
 export default ContentDisplay;

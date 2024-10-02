@@ -23,7 +23,9 @@ function Home() {
   useEffect(() => {
     const genAIInstance = new GoogleGenerativeAI(apiKey);
     setGenAI(genAIInstance);
-    const generativeModel = genAIInstance.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const generativeModel = genAIInstance.getGenerativeModel({
+      model: "gemini-1.5-flash",
+    });
     setModel(generativeModel);
   }, [apiKey]);
 
@@ -127,10 +129,17 @@ function Home() {
   }, []);
 
   return (
-    <section className="flex border border-gray-300 w-full h-screen overflow-hidden bg-gray-50">
+    <section
+      className={`flex border border-gray-300 w-full h-screen overflow-hidden bg-gray-50`}
+    >
       {showHistory && (
-        <div className="bg-gray-800 w-1/4 p-4 border-r border-gray-200">
-          <h3 className="text-xl font-semibold text-white mb-4">History</h3>
+        <div className="bg-gray-800 w-1/4 p-4 border-r border-gray-200 mob:w-full flex flex-col">
+          <div className="flex items-center justify-between w-1/2">
+            <button onClick={toggleHistory} aria-label="Toggle history">
+              <FaBars className="text-gray-500 text-2xl mob:text-lg" />
+            </button>
+            <p className="text-xl font-semibold text-white mob:text-lg">History</p>
+          </div>
           <HistoryList
             history={history}
             onEdit={handleEditHistory}
@@ -141,14 +150,20 @@ function Home() {
         </div>
       )}
       <div
-        className={`flex flex-col w-full bg-white transition-all duration-300`}
+        className={`flex flex-col w-full bg-white transition-all duration-300 ${
+          showHistory && "mob:w-0"
+        }`}
       >
         <header className="flex justify-between items-center px-4 py-2 border-b border-slate-300 shadow-md bg-white">
-          <button className="mr-4" onClick={toggleHistory} aria-label="Toggle history">
-            <FaBars className="text-gray-500 text-2xl" />
+          <button
+            className="mr-4"
+            onClick={toggleHistory}
+            aria-label="Toggle history"
+          >
+            <FaBars className="text-gray-500 text-2xl mob:text-lg" />
           </button>
-          <h2 className="text-xl font-bold">D-CHALIOS</h2>
-          <p className="text-gray-500">Memory-full</p>
+          <p className="text-xl font-bold mob:text-base">D-CHALIOS</p>
+          <p className="text-gray-500 mob:text-xs">Memory-full</p>
           <img
             src={avatar}
             alt="user"
@@ -156,17 +171,23 @@ function Home() {
           />
         </header>
         <div
-          className="flex-1 mx-4 mt-4 overflow-y-auto rounded-lg shadow-md bg-gray-50 p-4"
+          className="mx-4 mt-4 overflow-y-auto rounded-lg shadow-md bg-gray-50 p-4 mob:mx-1"
           ref={outputRef}
         >
           <ContentDisplay finalContent={finalContent} />
           {isLoading && (
-            <p className="text-gray-600 p-4">Generating content...</p>
+            <p className="text-gray-600 p-4 mob:p-2">Generating content...</p>
           )}
         </div>
-        <footer className="flex items-center p-3 bg-white border border-gray-300 rounded-full shadow-md mt-4 mx-4 h-14 mb-5">
-          <LuMic className="text-gray-500 text-2xl cursor-pointer hover:text-gray-700 transition-colors" aria-label="Microphone" />
-          <CgAttachment className="text-gray-500 text-2xl cursor-pointer hover:text-gray-700 mx-3 transition-colors" aria-label="Attachment" />
+        <footer className="flex items-center p-3 bg-white border border-gray-300 rounded-full shadow-md mt-4 mx-4 h-14 mb-5 mob:w-full mob:mx-auto mob:p-2 mob:h-11">
+          <LuMic
+            className="text-gray-500 text-2xl cursor-pointer hover:text-gray-700 transition-colors mob:text-9xl"
+            aria-label="Microphone"
+          />
+          <CgAttachment
+            className="text-gray-500 text-2xl cursor-pointer hover:text-gray-700 mx-3 transition-colors mob:text-9xl"
+            aria-label="Attachment"
+          />
           <input
             type="text"
             placeholder="Type your prompt..."
@@ -177,7 +198,7 @@ function Home() {
             aria-label="Input prompt"
           />
           <FaArrowAltCircleUp
-            className="text-gray-500 text-3xl cursor-pointer hover:text-gray-700 transition-colors"
+            className="text-gray-500 text-3xl cursor-pointer hover:text-gray-700 transition-colors mob:text-9xl"
             onClick={handleSubmit}
             aria-label="Submit prompt"
           />
