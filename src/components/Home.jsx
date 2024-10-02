@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import avatar from "../../public/avatar.svg";
+import avatar from "../assets/avatar.svg";
 import { CgAttachment } from "react-icons/cg";
 import { LuMic } from "react-icons/lu";
 import { FaArrowAltCircleUp, FaBars } from "react-icons/fa";
@@ -141,7 +141,7 @@ function Home() {
         </div>
       )}
       <div
-        className={`flex flex-col w-${showHistory ? "3/4" : "full"} bg-white transition-all duration-300`}
+        className={`flex flex-col w-full bg-white transition-all duration-300`}
       >
         <header className="flex justify-between items-center px-4 py-2 border-b border-slate-300 shadow-md bg-white">
           <button className="mr-4" onClick={toggleHistory} aria-label="Toggle history">
