@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { FaEllipsisH } from "react-icons/fa";
 
-const HistoryList = ({ history, onEdit, onDelete, onShare, onView }) => {
+const HistoryList = ({
+  history,
+  // onEdit,
+  // onDelete,
+  // onShare,
+  // onView,
+}) => {
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
 
   const handleMenuToggle = (index) => {
@@ -22,9 +28,9 @@ const HistoryList = ({ history, onEdit, onDelete, onShare, onView }) => {
         <div key={index} className="relative">
           <div
             className="flex justify-between items-center text-gray-400 p-2 hover:bg-gray-700 rounded transition duration-200 cursor-pointer"
-            onClick={() => {
-              onView(item); // Pass the selected item to the view function
-            }}
+            // onClick={() => {
+            //   onView(item); // Pass the selected item to the view function
+            // }}
           >
             <span className="whitespace-nowrap overflow-hidden overflow-ellipsis">
               {item}
@@ -40,28 +46,28 @@ const HistoryList = ({ history, onEdit, onDelete, onShare, onView }) => {
             <div className="absolute right-0 bg-gray-900 rounded shadow-lg mt-1">
               <button
                 className="block text-blue-400 hover:bg-gray-700 px-4 py-2 text-left"
-                onClick={(e) => {
-                  e.stopPropagation(); // Prevent the click from bubbling up
-                  onEdit(index);
-                }}
+                // onClick={(e) => {
+                //   e.stopPropagation(); // Prevent the click from bubbling up
+                //   onEdit(index);
+                // }}
               >
                 Edit
               </button>
               <button
                 className="block text-red-400 hover:bg-gray-700 px-4 py-2 text-left"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete(index);
-                }}
+                // onClick={(e) => {
+                //   e.stopPropagation();
+                //   onDelete(index);
+                // }}
               >
                 Delete
               </button>
               <button
                 className="block text-green-400 hover:bg-gray-700 px-4 py-2 text-left"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onShare(index);
-                }}
+                // onClick={(e) => {
+                //   e.stopPropagation();
+                //   onShare(index);
+                // }}
               >
                 Share
               </button>

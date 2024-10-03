@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
+import toast, { Toaster } from 'react-hot-toast';
 import avatar from "../assets/avatar.svg";
 import { CgAttachment } from "react-icons/cg";
 import { LuMic } from "react-icons/lu";
@@ -10,20 +11,16 @@ import HistoryList from "./HistoryList";
 function Home() {
   const apiKey = import.meta.env.VITE_GOOGLE;
   const gModel = import.meta.env.VITE_GOOGLE_MODEL;
-  const [genAI, setGenAI] = useState(null);
   const [model, setModel] = useState(null);
   const [inputQuery, setInputQuery] = useState("");
   const [finalContent, setFinalContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const outputRef = useRef(null);
   const [history, setHistory] = useState([]);
-  const [editMode, setEditMode] = useState(false);
-  const [editIndex, setEditIndex] = useState(null);
   const [showHistory, setShowHistory] = useState(window.innerWidth >= 768);
 
   useEffect(() => {
     const genAIInstance = new GoogleGenerativeAI(apiKey);
-    setGenAI(genAIInstance);
     const generativeModel = genAIInstance.getGenerativeModel({
       model: gModel,
     });
@@ -34,17 +31,10 @@ function Home() {
     setInputQuery(value);
   };
 
-  const handleShare = (index) => {
-    const contentToShare = history[index];
-    navigator.clipboard
-      .writeText(contentToShare)
-      .then(() => alert("Content copied to clipboard!"))
-      .catch((err) => console.error("Failed to copy: ", err));
-  };
-
   const getApi = async () => {
+    
     if (!inputQuery.trim()) {
-      alert("Please enter a valid prompt.");
+      toast.error("Please enter a valid prompt.");
       return;
     }
 
@@ -53,21 +43,10 @@ function Home() {
     try {
       const result = await model.generateContent(prompt);
       setFinalContent(result.response.text());
-      if (editMode) {
-        setHistory((prevHistory) => {
-          const newHistory = [...prevHistory];
-          newHistory[editIndex] = prompt; // Update the specific index
-          return newHistory;
-        });
-        setEditMode(false);
-        setEditIndex(null);
-      } else {
-        setHistory((prevHistory) => [...prevHistory, prompt]); // Add to history
-      }
       scrollToBottom();
     } catch (error) {
       console.error("Error generating content:", error);
-      alert("An error occurred while generating content. Please try again.");
+      toast.error("Error generating content.");
     } finally {
       setIsLoading(false);
     }
@@ -98,21 +77,6 @@ function Home() {
     scrollToBottom();
   }, [finalContent]);
 
-  const handleEditHistory = (index) => {
-    setInputQuery(history[index]);
-    setEditMode(true);
-    setEditIndex(index);
-  };
-
-  const handleDeleteHistory = (index) => {
-    setHistory((prevHistory) => prevHistory.filter((_, i) => i !== index));
-  };
-
-  const handleViewHistory = (index) => {
-    const prompt = history[index];
-    setInputQuery(prompt);
-    getApi();
-  };
 
   const toggleHistory = () => {
     setShowHistory((prev) => !prev);
@@ -131,8 +95,9 @@ function Home() {
 
   return (
     <section
-      className={`flex border border-gray-300 w-full h-screen overflow-hidden bg-gray-50`}
+      className={`flex w-full h-screen overflow-hidden bg-gray-50`}
     >
+    <Toaster />
       {showHistory && (
         <div className="bg-gray-800 w-1/4 p-4 border-r border-gray-200 mob:w-full flex flex-col">
           <div className="flex items-center justify-between w-1/2">
@@ -145,10 +110,10 @@ function Home() {
           </div>
           <HistoryList
             history={history}
-            onEdit={handleEditHistory}
-            onDelete={handleDeleteHistory}
-            onShare={handleShare}
-            onView={handleViewHistory}
+            // onEdit={handleEditHistory}
+            // onDelete={handleDeleteHistory}
+            // onShare={handleShare}
+            // onView={handleViewHistory}
           />
         </div>
       )}
@@ -174,7 +139,7 @@ function Home() {
           />
         </header>
         <div
-          className="flex-1 mx-4 mt-4 overflow-y-auto rounded-lg shadow-md bg-gray-50 p-4 mob:mx-1"
+          className="mt-6 mx-4 h-full overflow-y-auto rounded-lg mob:mx-1"
           ref={outputRef}
         >
           <ContentDisplay finalContent={finalContent} />
