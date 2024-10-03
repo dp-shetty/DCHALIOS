@@ -9,6 +9,7 @@ import HistoryList from "./HistoryList";
 
 function Home() {
   const apiKey = import.meta.env.VITE_GOOGLE;
+  const gModel = import.meta.env.VITE_GOOGLE_MODEL;
   const [genAI, setGenAI] = useState(null);
   const [model, setModel] = useState(null);
   const [inputQuery, setInputQuery] = useState("");
@@ -24,7 +25,7 @@ function Home() {
     const genAIInstance = new GoogleGenerativeAI(apiKey);
     setGenAI(genAIInstance);
     const generativeModel = genAIInstance.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: gModel,
     });
     setModel(generativeModel);
   }, [apiKey]);
@@ -138,7 +139,9 @@ function Home() {
             <button onClick={toggleHistory} aria-label="Toggle history">
               <FaBars className="text-gray-500 text-2xl mob:text-lg" />
             </button>
-            <p className="text-xl font-semibold text-white mob:text-lg">History</p>
+            <p className="text-xl font-semibold text-white mob:text-lg">
+              History
+            </p>
           </div>
           <HistoryList
             history={history}
@@ -176,7 +179,9 @@ function Home() {
         >
           <ContentDisplay finalContent={finalContent} />
           {isLoading && (
-            <p className="text-gray-600 p-4 mob:p-2">Generating your  content...</p>
+            <p className="text-gray-600 p-4 mob:p-2">
+              Generating your content...
+            </p>
           )}
         </div>
         <footer className="flex items-center p-3 bg-white border border-gray-300 rounded-full shadow-md mt-4 mx-4 h-14 mb-5 mob:w-full mob:mx-auto mob:p-2 mob:h-11">
