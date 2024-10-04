@@ -10,7 +10,9 @@ function useFetch(url, headers) {
 
     async function fetchData() {
       try {
-        const { data } = await axios.get(url, { headers: { Authorization: headers } });
+        const { data } = await axios.get(url, {
+          headers: { Authorization: headers },
+        });
         setApiData(data);
       } catch (error) {
         setError(error);
