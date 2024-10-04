@@ -51,18 +51,18 @@ function Signup() {
   return (
     <>
       <section className="w-screen h-screen flex bg-landing-bg-image bg-no-repeat bg-center bg-cover">
-        <div className="w-1/2 rounded-2xl m-auto flex flex-col justify-center items-center gap-5 py-3 text-white backdrop-blur-lg backdrop-saturate-[200%] bg-[rgba(17, 25, 40, 0.6)] border border-[rgba(255, 255, 255, 0.125)] mob:w-11/12">
+        <div className="w-1/4 rounded-2xl m-auto flex flex-col items-center text-white backdrop-blur-lg backdrop-saturate-[200%] bg-[rgba(17, 25, 40, 0.6)] border border-[rgba(255, 255, 255, 0.125)] mob:w-11/12 gap-2 py-5">
           <TextFieldComponent
             label="email"
             name="user_info"
-            width={"50%"}
+            width={"90%"}
             ipBorderColor={"white"}
             ipLabelColor={"white"}
             required={true}
           />
           <PortfolioButton
             text="CONTINUE"
-            className={`border pl-32 border-solid w-1/2 h-12 rounded-full flex items-center justify-between mob:w-11/12 mob:pl-8 mob:mt-4`}
+            className={`border pl-24 border-solid w-11/12 h-12 rounded-full flex items-center justify-between mob:w-11/12 mob:pl-8 mob:mt-4`}
             type={"button"}
             onClick={handleSignup}
           />
@@ -74,14 +74,14 @@ function Signup() {
             <PortfolioButton
               text="CONTINUE WITH GOOGLE"
               icon={GoogleIcon}
-              className={`border pl-16 border-solid w-1/2 h-12 rounded-full flex items-center justify-between mb-7 bg-transparent hover:bg-bgpfp-yellow hover:transition-all hover:duration-bg-transitio`}
+              className={`border mob:w-11/12 mob:pl-4 pl-3 border-solid w-3/4 h-12 rounded-full flex items-center justify-between mb-7 bg-transparent hover:bg-bgpfp-yellow hover:transition-all hover:duration-bg-transitio`}
               onClick={handleGoogleSignIn}
               type={"button"}
             />
             <PortfolioButton
               text="CONTINUE WITH GITHUB"
               icon={GitHubIcon}
-              className={`border pl-16 border-solid w-1/2 h-12 rounded-full flex items-center justify-between mb-7 bg-transparent hover:bg-bgpfp-yellow hover:transition-all hover:duration-bg-transitio`}
+              className={`border mob:w-11/12 mob:pl-4 pl-5 border-solid w-3/4 h-12 rounded-full flex items-center justify-between mb-7 bg-transparent hover:bg-bgpfp-yellow hover:transition-all hover:duration-bg-transitio`}
               onClick={handleGithubSignIn}
               type={"button"}
             />

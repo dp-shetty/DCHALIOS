@@ -19,16 +19,18 @@ export const TextFieldComponent = ({
   selectFontSize = "1em",
   className,
   tailwindClass,
-  width,
+  width = "5rem",
   ipBorderColor,
   ipLabelColor,
   disable,
+  textColor,
 }) => {
   const [textfieldBorderColor, setTextfieldBorderColor] =
     useState(ipBorderColor);
   const [labelColor, setLabelColor] = useState(ipLabelColor);
   const [iconColor, setIconColor] = useState("#ffb400");
   const [requiredColor, setRequiredColor] = useState("red");
+  // const [textColorIp, setTextColor] = useState(textColor);
 
   const borderColor = touched && error ? "red" : textfieldBorderColor;
   const labelErrorColor = touched && error ? "red" : labelColor;
@@ -51,6 +53,7 @@ export const TextFieldComponent = ({
       disabled={disable}
       sx={{
         width: width,
+        // color:textColor,
         "& .MuiOutlinedInput-root": {
           "& fieldset": {
             borderColor: borderColor,
@@ -62,7 +65,7 @@ export const TextFieldComponent = ({
             borderColor: borderColor,
           },
           "& input": {
-            color: labelErrorColor,
+            color: textColor,
             fontSize: fontSize,
           },
         },
@@ -80,7 +83,7 @@ export const TextFieldComponent = ({
           color: iconColor,
         },
       }}
-      className={`${tailwindClass} ${className}`} // Combine Tailwind and additional classes
+      className={`${tailwindClass} ${className} ${width}`} // Combine Tailwind and additional classes
     >
       {children}
     </TextField>
