@@ -1,5 +1,6 @@
 import React from "react";
 import { TextFieldComponent } from "../common/TextFieldComponent";
+import toast, { Toaster } from "react-hot-toast";
 import PortfolioButton from "../common/PortfolioButton";
 import { NavLink } from "react-router-dom";
 import GoogleIcon from "@mui/icons-material/Google";
@@ -16,6 +17,10 @@ function Login() {
   const handleContinue = () => {
     Navigation("/login/auth");
   };
+
+  const handleSignup = ()=>{
+    Navigation("/signup");
+  }
 
   const handleGoogleSignIn = async () => {
     try {
@@ -52,6 +57,7 @@ function Login() {
 
   return (
     <section className="w-screen h-screen flex bg-landing-bg-image bg-no-repeat bg-center bg-cover">
+    <Toaster/>
       <div className="w-1/4 rounded-2xl m-auto flex flex-col items-center text-white backdrop-blur-lg backdrop-saturate-[200%] bg-[rgba(17, 25, 40, 0.6)] border border-[rgba(255, 255, 255, 0.125)] mob:w-11/12 gap-2 py-5">
         <div className="email-div w-full border-b flex justify-center items-center flex-col p-3">
           <TextFieldComponent
@@ -76,6 +82,7 @@ function Login() {
             icon={TelegramIcon}
             className={`border mob:w-11/12 mob:pl-6 pl-24 mt-4 border-solid w-3/4 h-12 rounded-full flex items-center justify-between mb-7 bg-transparent hover:bg-bgpfp-yellow hover:transition-all hover:duration-bg-transitio`}
             type={"submit"}
+            onClick={handleSignup}
           />
           <PortfolioButton
             text="CONTINUE WITH GOOGLE"

@@ -1,5 +1,6 @@
 import React from "react";
 import { TextFieldComponent } from "./common/TextFieldComponent";
+import toast, { Toaster } from "react-hot-toast";
 import PortfolioButton from "./common/PortfolioButton";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -51,6 +52,7 @@ function Signup() {
   return (
     <>
       <section className="w-screen h-screen flex bg-landing-bg-image bg-no-repeat bg-center bg-cover">
+      <Toaster/>
         <div className="w-1/4 rounded-2xl m-auto flex flex-col items-center text-white backdrop-blur-lg backdrop-saturate-[200%] bg-[rgba(17, 25, 40, 0.6)] border border-[rgba(255, 255, 255, 0.125)] mob:w-11/12 gap-2 py-5">
           <TextFieldComponent
             label="email"
