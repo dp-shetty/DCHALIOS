@@ -12,6 +12,8 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
+
+
   const Navigation = useNavigate();
 
   const handleContinue = () => {
@@ -25,12 +27,8 @@ function Login() {
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-      // Do something with the user info, e.g., set it in context or save it to your backend
-      setUserData({
-        user_name: user.displayName,
-        user_email: user.email,
-      });
+      const user = result;
+      console.log(user)
       toast.success("Google sign-in successful!");
     } catch (error) {
       console.error("Error signing in with Google:", error);
@@ -43,11 +41,7 @@ function Login() {
     try {
       const result = await signInWithPopup(auth, githubProvider);
       const user = result.user;
-      // Do something with the user info, e.g., set it in context or save it to your backend
-      setUserData({
-        user_name: user.displayName,
-        user_email: user.email,
-      });
+      console.log(user)
       toast.success("GitHub sign-in successful!");
     } catch (error) {
       console.error("Error signing in with GitHub:", error);
