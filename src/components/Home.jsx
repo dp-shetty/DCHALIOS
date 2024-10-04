@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
 import avatar from "../assets/avatar.svg";
 import { CgAttachment } from "react-icons/cg";
 import { LuMic } from "react-icons/lu";
@@ -32,7 +32,6 @@ function Home() {
   };
 
   const getApi = async () => {
-    
     if (!inputQuery.trim()) {
       toast.error("Please enter a valid prompt.");
       return;
@@ -77,7 +76,6 @@ function Home() {
     scrollToBottom();
   }, [finalContent]);
 
-
   const toggleHistory = () => {
     setShowHistory((prev) => !prev);
   };
@@ -94,10 +92,8 @@ function Home() {
   }, []);
 
   return (
-    <section
-      className={`flex w-full h-screen overflow-hidden bg-gray-50`}
-    >
-    <Toaster />
+    <section className={`flex w-full h-screen overflow-hidden bg-gray-50`}>
+      <Toaster />
       {showHistory && (
         <div className="bg-gray-800 w-1/4 p-4 border-r border-gray-200 mob:w-full flex flex-col">
           <div className="flex items-center justify-between w-1/2">

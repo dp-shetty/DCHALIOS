@@ -1,12 +1,12 @@
-import React from 'react'
-import Home from './components/Home'
+import React from "react";
+import MyRoutes from "./components/routes/MyRoutes";
 
 function App() {
   return (
     <>
-    <Home/>
+      <MyRoutes />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

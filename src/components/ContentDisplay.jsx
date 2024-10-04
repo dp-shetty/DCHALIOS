@@ -39,7 +39,12 @@ const ContentDisplay = React.memo(({ finalContent }) => {
           ),
           // Optional: Customize rendering of links
           a: ({ href, children }) => (
-            <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline"
+            >
               {children}
             </a>
           ),
