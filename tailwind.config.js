@@ -56,7 +56,7 @@ export default {
         "landing-card": "#111928",
       },
       backgroundImage: {
-        "landing-bg-image": "url('src/assets/landing-bg.webp')",
+        "landing-bg-image": "url('src/assets/landing-bg.png')",
       },
       backdropBlur: {
         16: "16px",
