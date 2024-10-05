@@ -18,18 +18,19 @@ function SignupAuth() {
 
   // Regular expressions for password validation
   const hasDigit = /\d/;
-  const hasTwoSpecialChars = (password) => (password.match(/\W/g) || []).length >= 2;
+  const hasTwoSpecialChars = (password) =>
+    (password.match(/\W/g) || []).length >= 2;
   const hasLetter = /[a-zA-Z]/;
   const noSpaces = (password) => !/\s/.test(password);
 
   // Check if all password requirements are met
   const validatePassword = () => {
-    const isValid = 
+    const isValid =
       hasDigit.test(passwordData) &&
       hasTwoSpecialChars(passwordData) &&
       hasLetter.test(passwordData) &&
       noSpaces(passwordData);
-      
+
     setIsPasswordValid(isValid);
   };
 
@@ -41,16 +42,20 @@ function SignupAuth() {
   // New function to handle email signup with backend using axios
   const handleEmailSignup = async () => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/signup`, { // Use import.meta.env for Vite
-        email,
-        password: passwordData,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/signed-users`,
+        {
+          email,
+          password: passwordData,
+        }
+      );
 
-      toast.success(response.data.message); // Show success message from backend
-      navigate('/dchalios-ai'); // Change this to the desired page
+      // toast.success(response.data.message); // Show success message from backend
+      // navigate("/dchalios-ai"); // Change this to the desired page
     } catch (error) {
       console.error("Error during email signup:", error);
-      const errorMessage = error.response?.data?.message || "Failed to sign up. Please try again.";
+      const errorMessage =
+        error.response?.data?.message || "Failed to sign up. Please try again.";
       toast.error(errorMessage); // Show error message from backend
     }
   };
@@ -102,16 +107,41 @@ function SignupAuth() {
           {/* Password validation requirements */}
           <div className="password-validation mt-2 mb-2">
             <ul className="text-sm">
-              <li className={`flex items-center ${hasDigit.test(passwordData) ? "text-green-500" : "text-red-500"}`}>
-                {hasDigit.test(passwordData) ? "✓" : "✗"} Must contain at least 1 digit
+              <li
+                className={`flex items-center ${
+                  hasDigit.test(passwordData)
+                    ? "text-green-500"
+                    : "text-red-500"
+                }`}
+              >
+                {hasDigit.test(passwordData) ? "✓" : "✗"} Must contain at least
+                1 digit
               </li>
-              <li className={`flex items-center ${hasTwoSpecialChars(passwordData) ? "text-green-500" : "text-red-500"}`}>
-                {hasTwoSpecialChars(passwordData) ? "✓" : "✗"} Must contain at least 2 special characters
+              <li
+                className={`flex items-center ${
+                  hasTwoSpecialChars(passwordData)
+                    ? "text-green-500"
+                    : "text-red-500"
+                }`}
+              >
+                {hasTwoSpecialChars(passwordData) ? "✓" : "✗"} Must contain at
+                least 2 special characters
               </li>
-              <li className={`flex items-center ${hasLetter.test(passwordData) ? "text-green-500" : "text-red-500"}`}>
-                {hasLetter.test(passwordData) ? "✓" : "✗"} Must contain at least 1 alphabetic character
+              <li
+                className={`flex items-center ${
+                  hasLetter.test(passwordData)
+                    ? "text-green-500"
+                    : "text-red-500"
+                }`}
+              >
+                {hasLetter.test(passwordData) ? "✓" : "✗"} Must contain at least
+                1 alphabetic character
               </li>
-              <li className={`flex items-center ${noSpaces(passwordData) ? "text-green-500" : "text-red-500"}`}>
+              <li
+                className={`flex items-center ${
+                  noSpaces(passwordData) ? "text-green-500" : "text-red-500"
+                }`}
+              >
                 {noSpaces(passwordData) ? "✓" : "✗"} Must not contain spaces
               </li>
             </ul>
