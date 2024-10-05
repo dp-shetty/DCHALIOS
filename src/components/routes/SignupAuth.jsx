@@ -37,15 +37,6 @@ function SignupAuth() {
     setIsPasswordValid(isValid);
   };
 
-  const handleToast = (message, duration) => {
-    return new Promise((resolve) => {
-      toast.success(message, {
-        duration: duration, // Show toast for specified duration
-        onClose: resolve, // Resolve promise when toast is closed
-      });
-    });
-  };
-
   const handlePasswordChange = ({ target: { value } }) => {
     setPasswordData(value);
     validatePassword();
@@ -67,7 +58,7 @@ function SignupAuth() {
         }
       );
       const toastDuration = 3000;
-      await handleToast("Verification link sent to your email.", toastDuration);
+      toast.success("Verification link sent to your email.", toastDuration);
       window.location.href = verfyFirstUrl;
     } catch (error) {
       console.error("Error during email signup:", error);
