@@ -16,6 +16,8 @@ function SignupAuth() {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const navigate = useNavigate();
 
+  const backUrl = import.meta.env.VITE_BACKEND_URL
+
   // Regular expressions for password validation
   const hasDigit = /\d/;
   const hasTwoSpecialChars = (password) =>
@@ -41,14 +43,22 @@ function SignupAuth() {
 
   // New function to handle email signup with backend using axios
   const handleEmailSignup = async () => {
+
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/signed-users`,
+      await axios.post(
+        `${backUrl}/signed-users`,
         {
           email,
           password: passwordData,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
+
+      // console.log(data)
 
       // toast.success(response.data.message); // Show success message from backend
       // navigate("/dchalios-ai"); // Change this to the desired page
