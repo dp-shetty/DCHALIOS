@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { TextFieldComponent } from "./common/TextFieldComponent";
 import toast, { Toaster } from "react-hot-toast";
 import PortfolioButton from "./common/PortfolioButton";
@@ -12,9 +12,30 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 function Signup() {
   const Navigation = useNavigate();
+  const [emailData,setEmailData] = useState()
+  const [emailValidation,setEmailValidation] = useState(false)
+  const [inputBorderColor, setInputBorderColor] = useState("white");
+
+  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
+
+  const handleChange = ({ target: { value } }) => {
+    if (emailRegex.test(value)) {
+      setEmailData(value);
+      setEmailValidation(true);
+      setInputBorderColor("white");
+    } else {
+      setInputBorderColor("red");
+      setEmailValidation(false);
+    }
+  };
 
   const handleSignup = () => {
-    Navigation("/signup/auth");
+    if (emailValidation) {
+      sessionStorage.setItem("userEmail", emailData);
+      Navigation("/signup/auth");
+    } else {
+      toast.error("Invalid email address!");
+    }
   };
 
   const handleGoogleSignIn = async () => {
@@ -49,7 +70,9 @@ function Signup() {
             width={"90%"}
             ipBorderColor={"white"}
             ipLabelColor={"white"}
-            required={true}
+            required={false}
+            onChange={handleChange}
+            inputBorderColor={inputBorderColor}
           />
           <PortfolioButton
             text="CONTINUE"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { TextField } from "@mui/material";
 
 export const TextFieldComponent = ({
@@ -11,27 +11,22 @@ export const TextFieldComponent = ({
   multiline = false,
   required,
   rows,
-  children,
   onBlur,
   error,
   touched,
   fontSize = "1em",
-  selectFontSize = "1em",
   className,
   tailwindClass,
   width = "5rem",
   ipBorderColor,
-  ipLabelColor,
+  ipLabelColor = "black", // Default label color
   disable,
   textColor,
+  inputBorderColor,
 }) => {
-  const [textfieldBorderColor, setTextfieldBorderColor] =
-    useState(ipBorderColor);
+  const [textfieldBorderColor, setTextfieldBorderColor] = useState(ipBorderColor);
   const [labelColor, setLabelColor] = useState(ipLabelColor);
-  const [iconColor, setIconColor] = useState("#ffb400");
-  const [requiredColor, setRequiredColor] = useState("red");
-  // const [textColorIp, setTextColor] = useState(textColor);
-
+  
   const borderColor = touched && error ? "red" : textfieldBorderColor;
   const labelErrorColor = touched && error ? "red" : labelColor;
 
@@ -50,19 +45,21 @@ export const TextFieldComponent = ({
       autoComplete="off"
       margin="normal"
       required={required}
-      disabled={disable}
+      disabled={disable} // Prop to control disabled state
+      InputLabelProps={{
+        shrink: Boolean(value) || disable, // Force label to shrink when there's a value or field is disabled
+      }}
       sx={{
         width: width,
-        // color:textColor,
         "& .MuiOutlinedInput-root": {
           "& fieldset": {
-            borderColor: borderColor,
+            borderColor: inputBorderColor,
           },
           "&:hover fieldset": {
             borderColor: borderColor,
           },
           "&.Mui-focused fieldset": {
-            borderColor: borderColor,
+            borderColor: inputBorderColor,
           },
           "& input": {
             color: textColor,
@@ -70,22 +67,17 @@ export const TextFieldComponent = ({
           },
         },
         "& .MuiInputLabel-root": {
-          color: labelErrorColor,
+          color: labelErrorColor, // Change color based on error state
           fontSize: fontSize,
         },
         "& .MuiInputLabel-root.Mui-focused": {
-          color: labelErrorColor,
+          color: labelErrorColor, // Keep focused label color consistent
         },
-        "& .MuiInputLabel-asterisk": {
-          color: requiredColor,
-        },
-        "& .MuiSelect-icon": {
-          color: iconColor,
+        "& .MuiInputLabel-root.Mui-disabled": {
+          color: "gray", // Optional: Customize disabled label color if needed
         },
       }}
       className={`${tailwindClass} ${className} ${width}`} // Combine Tailwind and additional classes
-    >
-      {children}
-    </TextField>
+    />
   );
 };
