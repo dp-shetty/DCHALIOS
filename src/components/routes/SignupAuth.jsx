@@ -16,7 +16,8 @@ function SignupAuth() {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const navigate = useNavigate();
 
-  const backUrl = import.meta.env.VITE_BACKEND_URL
+  const backUrl = import.meta.env.VITE_BACKEND_URL;
+  const verfyFirstUrl = import.meta.env.VITE_VERIFY_START;
 
   // Regular expressions for password validation
   const hasDigit = /\d/;
@@ -36,6 +37,15 @@ function SignupAuth() {
     setIsPasswordValid(isValid);
   };
 
+  const handleToast = (message, duration) => {
+    return new Promise((resolve) => {
+      toast.success(message, {
+        duration: duration, // Show toast for specified duration
+        onClose: resolve, // Resolve promise when toast is closed
+      });
+    });
+  };
+
   const handlePasswordChange = ({ target: { value } }) => {
     setPasswordData(value);
     validatePassword();
@@ -43,7 +53,6 @@ function SignupAuth() {
 
   // New function to handle email signup with backend using axios
   const handleEmailSignup = async () => {
-
     try {
       await axios.post(
         `${backUrl}/signed-users`,
@@ -57,11 +66,9 @@ function SignupAuth() {
           },
         }
       );
-
-      // console.log(data)
-
-      // toast.success(response.data.message); // Show success message from backend
-      // navigate("/dchalios-ai"); // Change this to the desired page
+      const toastDuration = 3000;
+      await handleToast("Verification link sent to your email.", toastDuration);
+      window.location.href = verfyFirstUrl;
     } catch (error) {
       console.error("Error during email signup:", error);
       const errorMessage =
