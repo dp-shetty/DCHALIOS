@@ -38,7 +38,7 @@ function Login() {
       if (emailValidation) {
         const { data } = await axios.get(`${backUrl}/signed-users`);
         const storedMail = data.some(({ email }) => email === emailData);
-  
+
         if (storedMail) {
           sessionStorage.setItem("loginEmail", emailData);
           toast.success("Email found. Proceeding to authentication", {
@@ -61,8 +61,6 @@ function Login() {
       toast.error("Failed to retrieve user data.");
     }
   };
-  
-  
 
   const handleSignup = () => {
     Navigation("/signup");
@@ -71,14 +69,48 @@ function Login() {
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      const user = result;
-      console.log(user);
+
+      const email = result.user.email
+      const provider = "google"
+      const providerId = result.user.providerId
+      const emailVerified = result.user.emailVerified
+      const photoURL = result.user.photoURL
+      const displayName = result.user.displayName
+      
       toast.success("Google sign-in successful!");
+      await checkEmailInDatabase(email,provider,providerId,emailVerified,photoURL,displayName);
     } catch (error) {
       console.error("Error signing in with Google:", error);
       toast.error("Failed to sign in with Google. Please try again.");
     }
   };
+
+  const checkEmailInDatabase = async(loggedEmail,provider,providerId,isVerified,profilePicture,displayName)=>{
+    try {
+      const {data} = await axios.get(`${backUrl}/signed-users`)
+      const socialUserResponse = await axios.get(`${backUrl}/social-users`)
+      const userExists = data.some(({email}) => email === loggedEmail);
+      const socialUsersExist = socialUserResponse.data.some(({email}) => email === loggedEmail);
+      if (userExists || socialUsersExist ) {
+        console.log('Email exists in the database:', loggedEmail);
+        toast.success("Proceeding with the application")
+      } else {
+        console.log('Email does not exist in the database:', loggedEmail);
+        const newUser = {
+          email: loggedEmail,
+          provider,
+          providerId,
+          isVerified,
+          profilePicture,
+          displayName
+        };
+        await axios.post(`${backUrl}/social-users`, newUser)
+        // Handle the case where the email does not exist (e.g., allow registration)
+      }
+    } catch (error) {
+      console.error('Error checking email in database:', error);
+    }
+  }
 
   // Function to handle GitHub sign-in
   const handleGithubSignIn = async () => {
