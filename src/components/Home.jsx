@@ -126,8 +126,7 @@ function Home() {
           >
             <FaBars className="text-gray-500 text-2xl mob:text-lg" />
           </button>
-          <p className="text-xl font-bold mob:text-base">D-CHALIOS</p>
-          <p className="text-gray-500 mob:text-xs">Memory-full</p>
+          <p className="text-xl font-bold mob:text-base">D-CHALIOS 🤖</p>
           <img
             src={avatar}
             alt="user"
@@ -145,13 +144,13 @@ function Home() {
             </p>
           )}
         </div>
-        <footer className="flex items-center p-3 bg-white border border-gray-300 rounded-full shadow-md mt-4 mx-4 h-14 mb-5 mob:w-full mob:mx-auto mob:p-2 mob:h-11">
+        <footer className="flex items-center p-3 bg-white border border-gray-300 rounded-full shadow-md mt-4 mx-4 h-14 mb-5 mob:w-[99%] mob:mx-auto ">
           <LuMic
-            className="text-gray-500 text-2xl cursor-pointer hover:text-gray-700 transition-colors mob:text-9xl"
+            className="text-gray-500 text-2xl cursor-pointer hover:text-gray-700 transition-colors mob:text-4xl"
             aria-label="Microphone"
           />
           <CgAttachment
-            className="text-gray-500 text-2xl cursor-pointer hover:text-gray-700 mx-3 transition-colors mob:text-9xl"
+            className="text-gray-500 text-2xl cursor-pointer hover:text-gray-700 mx-3 transition-colors mob:text-4xl"
             aria-label="Attachment"
           />
           <input
@@ -164,7 +163,7 @@ function Home() {
             aria-label="Input prompt"
           />
           <FaArrowAltCircleUp
-            className="text-gray-500 text-3xl cursor-pointer hover:text-gray-700 transition-colors mob:text-9xl"
+            className="text-gray-500 text-3xl cursor-pointer hover:text-gray-700 transition-colors mob:text-4xl"
             onClick={handleSubmit}
             aria-label="Submit prompt"
           />
