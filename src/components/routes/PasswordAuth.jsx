@@ -78,7 +78,7 @@ function PasswordAuth() {
       return;
     }
     try {
-      const response = await axios.post(`${backUrl}/forgot-password`, { email: loginEmail });
+      const response = await axios.post(`${backUrl}/reset-password`, { email: loginEmail });
       toast.success(response.data.message);
       window.location.replace("https://reset-green.vercel.app/");
     } catch (error) {
