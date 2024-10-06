@@ -120,7 +120,7 @@ function PasswordAuth() {
             onClick={handleContinue}
           />
           <div className="w-full flex items-center justify-center mb-3">
-            <button onClick={handleForgotPassword}>Forget Password?</button>
+            <button onClick={handleForgotPassword}>Forgot Password?</button>
           </div>
         </div>
         <div className="back w-full flex justify-center items-center gap-5 mob:mb-1">
