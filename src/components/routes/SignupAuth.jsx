@@ -15,9 +15,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import axios from "axios";
 
 function SignupAuth() {
-  const [email, setEmail] = useState(
-    sessionStorage.getItem("signupEmail") || ""
-  );
+  const [email, setEmail] = useState(sessionStorage.getItem("signupEmail"));
   const [passwordData, setPasswordData] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -49,51 +47,37 @@ function SignupAuth() {
 
   const handleEmailSignup = async () => {
     try {
-      await axios.post(
-        `${backUrl}/signed-users`,
-        {
-          email,
-          password: passwordData,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
+      const { data } = await axios.get(`${backUrl}/signed-users`);
+      const enteredMail = email;
+      console.log(data);
+      const isEmailExist = data.some(({ email }) => enteredMail === email); // Fixed
+      console.log(email, isEmailExist);
+      if (isEmailExist) {
+        toast.error("Email already exists, please login");
+        return;
+      } else {
+        await axios.post(
+          `${backUrl}/signed-users`,
+          {
+            email,
+            password: passwordData,
           },
-        }
-      );
-      toast.success("Verification link sent to your email.", {
-        duration: 3000,
-      });
-      window.location.replace(verfyFirstUrl);
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        toast.success("Verification link sent to your email.", {
+          duration: 3000,
+        });
+        window.location.replace(verfyFirstUrl);
+      }
     } catch (error) {
       console.error("Error during email signup:", error);
       const errorMessage =
         error.response?.data?.message || "Failed to sign up. Please try again.";
       toast.error(errorMessage);
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    try {
-     const result =  await signInWithPopup(auth, googleProvider);
-     const token = result.credential.accessToken;
-     const user = result.user;
-     const email = user.email;
-     console.log("user :",user,"email :",email,"token :",token)
-      // toast.success("Google sign-in successful!");
-    } catch (error) {
-      console.error("Error signing in with Google:", error);
-      toast.error("Failed to sign in with Google. Please try again.");
-    }
-  };
-
-  const handleGithubSignIn = async () => {
-    try {
-      await signInWithPopup(auth, githubProvider);
-      toast.success("GitHub sign-in successful!");
-    } catch (error) {
-      console.error("Error signing in with GitHub:", error);
-      toast.error("Failed to sign in with GitHub. Please try again.");
     }
   };
 
