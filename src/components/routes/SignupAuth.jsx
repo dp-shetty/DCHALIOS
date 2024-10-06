@@ -103,7 +103,7 @@ function SignupAuth() {
       <div className="w-1/4 mob:w-11/12 mob:gap-1 mob:py-2 rounded-2xl m-auto flex flex-col items-center text-white backdrop-blur-lg backdrop-saturate-[200%] bg-[rgba(17, 25, 40, 0.6)] border-[rgba(255, 255, 255, 0.125)] gap-4 py-4">
         <div className="email-div w-full border-b flex justify-center items-center flex-col p-0 gap-1 mob:mb-5">
           <TextFieldComponent
-            label="email / number"
+            label="email"
             name="user_info"
             width={"90%"}
             ipBorderColor={"white"}
