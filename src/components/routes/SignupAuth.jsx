@@ -75,8 +75,12 @@ function SignupAuth() {
 
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
-      toast.success("Google sign-in successful!");
+     const result =  await signInWithPopup(auth, googleProvider);
+     const token = result.credential.accessToken;
+     const user = result.user;
+     const email = user.email;
+     console.log("user :",user,"email :",email,"token :",token)
+      // toast.success("Google sign-in successful!");
     } catch (error) {
       console.error("Error signing in with Google:", error);
       toast.error("Failed to sign in with Google. Please try again.");
