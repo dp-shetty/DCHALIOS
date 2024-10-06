@@ -8,25 +8,30 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import { auth, googleProvider, githubProvider } from "../../firebase.js";
 import { signInWithPopup } from "firebase/auth";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import axios from "axios"; // Import axios
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import axios from "axios";
 
 function SignupAuth() {
-  const [email, setEmail] = useState(sessionStorage.getItem("userEmail") || ""); // Initialize email
+  const [email, setEmail] = useState(
+    sessionStorage.getItem("signupEmail") || ""
+  );
   const [passwordData, setPasswordData] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const backUrl = import.meta.env.VITE_BACKEND_URL;
   const verfyFirstUrl = import.meta.env.VITE_VERIFY_START;
 
-  // Regular expressions for password validation
   const hasDigit = /\d/;
   const hasTwoSpecialChars = (password) =>
     (password.match(/\W/g) || []).length >= 2;
   const hasLetter = /[a-zA-Z]/;
   const noSpaces = (password) => !/\s/.test(password);
 
-  // Check if all password requirements are met
   const validatePassword = () => {
     const isValid =
       hasDigit.test(passwordData) &&
@@ -42,7 +47,6 @@ function SignupAuth() {
     validatePassword();
   };
 
-  // New function to handle email signup with backend using axios
   const handleEmailSignup = async () => {
     try {
       await axios.post(
@@ -57,14 +61,15 @@ function SignupAuth() {
           },
         }
       );
-      const toastDuration = 3000;
-      toast.success("Verification link sent to your email.", toastDuration);
-      window.location.href = verfyFirstUrl;
+      toast.success("Verification link sent to your email.", {
+        duration: 3000,
+      });
+      window.location.replace(verfyFirstUrl);
     } catch (error) {
       console.error("Error during email signup:", error);
       const errorMessage =
         error.response?.data?.message || "Failed to sign up. Please try again.";
-      toast.error(errorMessage); // Show error message from backend
+      toast.error(errorMessage);
     }
   };
 
@@ -101,7 +106,7 @@ function SignupAuth() {
             required={false}
             disable={true}
             value={email}
-            onChange={(e) => setEmail(e.target.value)} // Add email input handler
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextFieldComponent
             label="Password"
@@ -109,10 +114,23 @@ function SignupAuth() {
             width={"90%"}
             ipBorderColor={"white"}
             required={true}
+            type={showPassword ? "text" : "password"} // Toggle between text and password
             onChange={handlePasswordChange}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
 
-          {/* Password validation requirements */}
           <div className="password-validation mt-2 mb-2">
             <ul className="text-sm">
               <li
@@ -161,32 +179,16 @@ function SignupAuth() {
             type={"button"}
             onClick={() => {
               if (isPasswordValid) {
-                handleEmailSignup(); // Call signup function
+                handleEmailSignup();
               } else {
                 toast.error("Ensure password requirements are met.");
               }
             }}
-            disabled={!isPasswordValid} // Disable button if password does not meet all requirements
+            disabled={!isPasswordValid}
           />
           <div className="w-full flex items-center justify-center pb-3">
             <NavLink>Forget Password?</NavLink>
           </div>
-        </div>
-        <div className="firebase-auth w-full flex flex-col justify-center items-center">
-          <PortfolioButton
-            text="CONTINUE WITH GOOGLE"
-            icon={GoogleIcon}
-            className={`border mob:w-11/12 mob:pl-4 pl-3 border-solid w-3/4 h-12 rounded-full flex items-center justify-between mb-7 bg-transparent hover:bg-bgpfp-yellow hover:transition-all hover:duration-bg-transitio`}
-            onClick={handleGoogleSignIn}
-            type={"button"}
-          />
-          <PortfolioButton
-            text="CONTINUE WITH GITHUB"
-            icon={GitHubIcon}
-            className={`border mob:w-11/12 mob:pl-4 pl-5 border-solid w-3/4 h-12 rounded-full flex items-center justify-between mb-3 mob:mb-3 bg-transparent hover:bg-bgpfp-yellow hover:transition-all hover:duration-bg-transitio`}
-            onClick={handleGithubSignIn}
-            type={"button"}
-          />
         </div>
         <div className="back w-full flex justify-center items-center gap-5 mob:mb-3">
           <ArrowBackIcon />

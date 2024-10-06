@@ -8,6 +8,7 @@ import SignupAuth from "./SignupAuth";
 import Home from "../Home";
 
 function MyRoutes() {
+
   return (
     <>
       <BrowserRouter>

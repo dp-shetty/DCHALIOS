@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { TextFieldComponent } from "../common/TextFieldComponent";
 import toast, { Toaster } from "react-hot-toast";
 import PortfolioButton from "../common/PortfolioButton";
@@ -10,25 +10,69 @@ import { auth, googleProvider, githubProvider } from "../../firebase.js";
 import { signInWithPopup } from "firebase/auth";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Login() {
-
+  const [emailData, setEmailData] = useState("");
+  const [emailValidation, setEmailValidation] = useState(false);
+  const [inputBorderColor, setInputBorderColor] = useState("white");
+  const backUrl = import.meta.env.VITE_BACKEND_URL;
 
   const Navigation = useNavigate();
 
-  const handleContinue = () => {
-    Navigation("/login/auth");
+  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+
+  const handleChange = ({ target: { value } }) => {
+    if (emailRegex.test(value)) {
+      setEmailData(value);
+      setEmailValidation(true);
+      setInputBorderColor("white");
+    } else {
+      setInputBorderColor("red");
+      setEmailValidation(false);
+    }
   };
 
-  const handleSignup = ()=>{
+  const handleContinue = async () => {
+    try {
+      if (emailValidation) {
+        const { data } = await axios.get(`${backUrl}/signed-users`);
+        const storedMail = data.some(({ email }) => email === emailData);
+  
+        if (storedMail) {
+          sessionStorage.setItem("loginEmail", emailData);
+          toast.success("Email found. Proceeding to authentication", {
+            style: {
+              width: "25rem",
+              maxWidth: "800px",
+            },
+            duration: 3000,
+          });
+
+          setTimeout(() => {
+            Navigation("/login/auth");
+          }, 5000);
+        } else {
+          toast.error("Email not found. Please sign up.");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      toast.error("Failed to retrieve user data.");
+    }
+  };
+  
+  
+
+  const handleSignup = () => {
     Navigation("/signup");
-  }
+  };
 
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result;
-      console.log(user)
+      console.log(user);
       toast.success("Google sign-in successful!");
     } catch (error) {
       console.error("Error signing in with Google:", error);
@@ -41,7 +85,7 @@ function Login() {
     try {
       const result = await signInWithPopup(auth, githubProvider);
       const user = result.user;
-      console.log(user)
+      console.log(user);
       toast.success("GitHub sign-in successful!");
     } catch (error) {
       console.error("Error signing in with GitHub:", error);
@@ -51,17 +95,19 @@ function Login() {
 
   return (
     <section className="w-screen h-screen flex bg-landing-bg-image bg-no-repeat bg-center bg-cover">
-    <Toaster/>
-      <div className="w-1/4 rounded-2xl m-auto flex flex-col items-center text-white backdrop-blur-lg backdrop-saturate-[200%] bg-[rgba(17, 25, 40, 0.6)] border border-[rgba(255, 255, 255, 0.125)] mob:w-11/12 gap-2 py-5">
-        <div className="email-div w-full border-b flex justify-center items-center flex-col p-3">
+      <Toaster />
+      <div className="w-1/4 rounded-2xl m-auto flex flex-col items-center text-white backdrop-blur-lg backdrop-saturate-[200%] bg-[rgba(17, 25, 40, 0.6)] border border-[rgba(255, 255, 255, 0.125)] mob:w-11/12  py-4">
+        <div className="email-div w-full border-b flex flex-col gap-3 justify-center items-center pb-4">
           <TextFieldComponent
-            label="email / number"
+            label="email"
             name="user_info"
             width="90%"
             ipBorderColor={"white"}
             ipLabelColor={"white"}
             required={true}
             textColor={"black"}
+            onChange={handleChange}
+            inputBorderColor={inputBorderColor}
           />
           <PortfolioButton
             text="CONTINUE"
@@ -70,25 +116,25 @@ function Login() {
             onClick={handleContinue}
           />
         </div>
-        <div className="firebase-auth w-full flex flex-col justify-center items-center">
+        <div className="firebase-auth w-full flex flex-col justify-center items-center gap-4 py-4">
           <PortfolioButton
             text="SIGNUP"
             icon={TelegramIcon}
-            className={`border mob:w-11/12 mob:pl-6 pl-24 mt-4 border-solid w-3/4 h-12 rounded-full flex items-center justify-between mb-7 bg-transparent hover:bg-bgpfp-yellow hover:transition-all hover:duration-bg-transitio`}
+            className={`border mob:w-11/12 mob:pl-6 pl-24 border-solid w-3/4 h-12 rounded-full flex items-center justify-between bg-transparent hover:bg-bgpfp-yellow hover:transition-all hover:duration-bg-transitio`}
             type={"submit"}
             onClick={handleSignup}
           />
           <PortfolioButton
             text="CONTINUE WITH GOOGLE"
             icon={GoogleIcon}
-            className={`border mob:w-11/12 mob:pl-4 pl-3 border-solid w-3/4 h-12 rounded-full flex items-center justify-between mb-7 bg-transparent hover:bg-bgpfp-yellow hover:transition-all hover:duration-bg-transitio`}
+            className={`border mob:w-11/12 mob:pl-4 pl-3 border-solid w-3/4 h-12 rounded-full flex items-center justify-between bg-transparent hover:bg-bgpfp-yellow hover:transition-all hover:duration-bg-transitio`}
             onClick={handleGoogleSignIn}
             type={"button"}
           />
           <PortfolioButton
             text="CONTINUE WITH GITHUB"
             icon={GitHubIcon}
-            className={`border mob:w-11/12 mob:pl-4 pl-5 border-solid w-3/4 h-12 rounded-full flex items-center justify-between mb-7 bg-transparent hover:bg-bgpfp-yellow hover:transition-all hover:duration-bg-transitio`}
+            className={`border mob:w-11/12 mob:pl-4 pl-5 border-solid w-3/4 h-12 rounded-full flex items-center justify-between bg-transparent hover:bg-bgpfp-yellow hover:transition-all hover:duration-bg-transitio`}
             onClick={handleGithubSignIn}
             type={"button"}
           />
