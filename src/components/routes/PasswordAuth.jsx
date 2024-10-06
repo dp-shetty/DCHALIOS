@@ -102,7 +102,6 @@ function PasswordAuth() {
             disable={true}
             value={loginEmail}
             onChange={(e) => setLoginEmail(e.target.value)}
-            type="password"
           />
           <TextFieldComponent
             label="Password"
@@ -112,6 +111,7 @@ function PasswordAuth() {
             ipLabelColor={"white"}
             required={true}
             onChange={(e)=>setPasswordData(e.target.value)}
+            type="password"
           />
           <PortfolioButton
             text="CONTINUE"
