@@ -91,9 +91,9 @@ function PasswordAuth() {
     <section className="w-screen h-screen flex bg-landing-bg-image bg-no-repeat bg-center bg-cover">
     <Toaster/>
       <div className="w-1/4 mob:w-11/12 mob:gap-1 mob:py-2 rounded-2xl m-auto flex flex-col items-center text-white backdrop-blur-lg backdrop-saturate-[200%] bg-[rgba(17, 25, 40, 0.6)] border border-[rgba(255, 255, 255, 0.125)] gap-5 py-5">
-        <div className="email-div w-full border-b flex justify-center items-center flex-col p-3 gap-3 mob:gap-1 mob:p-1">
+        <div className="email-div w-full border-b flex justify-center items-center flex-col p-3 gap-3 mob:gap-1 mob:p-1 mb-2">
           <TextFieldComponent
-            label="email / number"
+            label="email"
             name="user_info"
             width={"90%"}
             ipBorderColor={"white"}
@@ -119,7 +119,7 @@ function PasswordAuth() {
             type={"button"}
             onClick={handleContinue}
           />
-          <div className="w-full flex items-center justify-center">
+          <div className="w-full flex items-center justify-center mb-3">
             <button onClick={handleForgotPassword}>Forget Password?</button>
           </div>
         </div>

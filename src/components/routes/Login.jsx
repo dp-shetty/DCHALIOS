@@ -16,6 +16,7 @@ function Login() {
   const [emailData, setEmailData] = useState("");
   const [emailValidation, setEmailValidation] = useState(false);
   const [inputBorderColor, setInputBorderColor] = useState("white");
+  const [loading, setLoading] = useState(false); // New loading state
   const backUrl = import.meta.env.VITE_BACKEND_URL;
 
   const Navigation = useNavigate();
@@ -34,6 +35,8 @@ function Login() {
   };
 
   const handleContinue = async () => {
+    if (loading) return;
+    setLoading(true); // Disable button on first click
     try {
       if (emailValidation) {
         const { data } = await axios.get(`${backUrl}/signed-users`);
@@ -51,77 +54,119 @@ function Login() {
 
           setTimeout(() => {
             Navigation("/login/auth");
+            setLoading(false); // Re-enable button after navigation
           }, 5000);
         } else {
           toast.error("Email not found. Please sign up.");
+          setLoading(false); // Re-enable button after toast
         }
       }
     } catch (error) {
       console.error("Error fetching users:", error);
       toast.error("Failed to retrieve user data.");
+      setLoading(false); // Re-enable button on error
+    } finally{
+      setLoading(false);
     }
   };
 
   const handleSignup = () => {
+    setLoading(true);
     Navigation("/signup");
+    setLoading(false);
   };
 
   const handleGoogleSignIn = async () => {
+    setLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
-
-      const email = result.user.email
-      const provider = "google"
-      const providerId = result.user.providerId
-      const emailVerified = result.user.emailVerified
-      const photoURL = result.user.photoURL
-      const displayName = result.user.displayName
-      
-      toast.success("Google sign-in successful!");
-      await checkEmailInDatabase(email,provider,providerId,emailVerified,photoURL,displayName);
+      const user = result.user;
+      const userData = user.reloadUserInfo;
+      const email = userData.email;
+      const provider = "google";
+      const providerId = user.providerId;
+      const emailVerified = userData.emailVerified;
+      const photoURL = userData.photoURL;
+      const displayName = userData.displayName;
+      await checkEmailInDatabase(
+        email,
+        provider,
+        providerId,
+        emailVerified,
+        photoURL,
+        displayName
+      );
+      window.location.replace("https://dchalios.vercel.app/dchalios-ai");
     } catch (error) {
       console.error("Error signing in with Google:", error);
       toast.error("Failed to sign in with Google. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const checkEmailInDatabase = async(loggedEmail,provider,providerId,isVerified,profilePicture,displayName)=>{
+  const handleGithubSignIn = async () => {
+    setLoading(true);
     try {
-      const {data} = await axios.get(`${backUrl}/signed-users`)
-      const socialUserResponse = await axios.get(`${backUrl}/social-users`)
-      const userExists = data.some(({email}) => email === loggedEmail);
-      const socialUsersExist = socialUserResponse.data.some(({email}) => email === loggedEmail);
-      if (userExists || socialUsersExist ) {
-        console.log('Email exists in the database:', loggedEmail);
-        toast.success("Proceeding with the application")
+      const result = await signInWithPopup(auth, githubProvider);
+      const user = result.user;
+      const userData = user.reloadUserInfo;
+      const email = userData.email;
+      const provider = "github";
+      const providerId = user.providerId;
+      const emailVerified = userData.emailVerified;
+      const photoURL = userData.photoURL;
+      const displayName = userData.displayName;
+      await checkEmailInDatabase(
+        email,
+        provider,
+        providerId,
+        emailVerified,
+        photoURL,
+        displayName
+      );
+      window.location.replace("https://dchalios.vercel.app/dchalios-ai");
+    } catch (error) {
+      console.error("Error signing in with GitHub:", error);
+      toast.error("Failed to sign in with GitHub. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkEmailInDatabase = async (
+    loggedEmail,
+    provider,
+    providerId,
+    isVerified,
+    profilePicture,
+    displayName
+  ) => {
+    try {
+      const { data } = await axios.get(`${backUrl}/signed-users`);
+      const socialUserResponse = await axios.get(`${backUrl}/social-users`);
+      const userExists = data.some(({ email }) => email === loggedEmail);
+      const socialUsersExist = socialUserResponse.data.some(
+        ({ email }) => email === loggedEmail
+      );
+      if (userExists || socialUsersExist) {
+        console.log("Email exists in the database:", loggedEmail);
+        toast.success(`Welcome Back ${displayName} !`);
       } else {
-        console.log('Email does not exist in the database:', loggedEmail);
+        console.log("Email does not exist in the database:", loggedEmail);
         const newUser = {
           email: loggedEmail,
           provider,
           providerId,
           isVerified,
           profilePicture,
-          displayName
+          displayName,
         };
-        await axios.post(`${backUrl}/social-users`, newUser)
-        // Handle the case where the email does not exist (e.g., allow registration)
+        toast.success(`Welcome To Dchalios AI ${displayName} !`);
+        await axios.post(`${backUrl}/social-users`, newUser);
       }
     } catch (error) {
-      console.error('Error checking email in database:', error);
-    }
-  }
-
-  // Function to handle GitHub sign-in
-  const handleGithubSignIn = async () => {
-    try {
-      const result = await signInWithPopup(auth, githubProvider);
-      const user = result.user;
-      console.log(user);
-      toast.success("GitHub sign-in successful!");
-    } catch (error) {
-      console.error("Error signing in with GitHub:", error);
-      toast.error("Failed to sign in with GitHub. Please try again.");
+      console.error("Error checking email in database:", error);
     }
   };
 
@@ -146,6 +191,7 @@ function Login() {
             className={`border pl-24 border-solid w-11/12 h-12 rounded-full flex items-center justify-between mob:w-11/12 mob:pl-8 mob:mt-4`}
             type={"button"}
             onClick={handleContinue}
+            disabled={loading} // Disable button during loading
           />
         </div>
         <div className="firebase-auth w-full flex flex-col justify-center items-center gap-4 py-4">
@@ -155,6 +201,7 @@ function Login() {
             className={`border mob:w-11/12 mob:pl-6 pl-24 border-solid w-3/4 h-12 rounded-full flex items-center justify-between bg-transparent hover:bg-bgpfp-yellow hover:transition-all hover:duration-bg-transitio`}
             type={"submit"}
             onClick={handleSignup}
+            disabled={loading} // Disable button during loading
           />
           <PortfolioButton
             text="CONTINUE WITH GOOGLE"
@@ -162,6 +209,7 @@ function Login() {
             className={`border mob:w-11/12 mob:pl-4 pl-3 border-solid w-3/4 h-12 rounded-full flex items-center justify-between bg-transparent hover:bg-bgpfp-yellow hover:transition-all hover:duration-bg-transitio`}
             onClick={handleGoogleSignIn}
             type={"button"}
+            disabled={loading} // Disable button during loading
           />
           <PortfolioButton
             text="CONTINUE WITH GITHUB"
@@ -169,11 +217,14 @@ function Login() {
             className={`border mob:w-11/12 mob:pl-4 pl-5 border-solid w-3/4 h-12 rounded-full flex items-center justify-between bg-transparent hover:bg-bgpfp-yellow hover:transition-all hover:duration-bg-transitio`}
             onClick={handleGithubSignIn}
             type={"button"}
+            disabled={loading} // Disable button during loading
           />
         </div>
         <div className="back text-lg w-full flex justify-center items-center gap-2">
           <ArrowBackIcon />
-          <NavLink to={"/"}> GO BACK</NavLink>
+          <NavLink to="/" className="text-white hover:underline">
+            Go Back
+          </NavLink>
         </div>
       </div>
     </section>

@@ -13,6 +13,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 function Signup() {
   const Navigation = useNavigate();
   const [emailData, setEmailData] = useState();
+  const [loading, setLoading] = useState(false);
   const [emailValidation, setEmailValidation] = useState(false);
   const [inputBorderColor, setInputBorderColor] = useState("white");
 
@@ -39,24 +40,96 @@ function Signup() {
   };
 
   const handleGoogleSignIn = async () => {
+    setLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-      toast.success("Google sign-in successful!");
+      const userData = user.reloadUserInfo;
+      const email = userData.email;
+      const provider = "google";
+      const providerId = user.providerId;
+      const emailVerified = userData.emailVerified;
+      const photoURL = userData.photoURL;
+      const displayName = userData.displayName;
+      await checkEmailInDatabase(
+        email,
+        provider,
+        providerId,
+        emailVerified,
+        photoURL,
+        displayName
+      );
+      window.location.replace("https://dchalios.vercel.app/dchalios-ai");
     } catch (error) {
       console.error("Error signing in with Google:", error);
       toast.error("Failed to sign in with Google. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Function to handle GitHub sign-in
   const handleGithubSignIn = async () => {
+    setLoading(true);
     try {
       const result = await signInWithPopup(auth, githubProvider);
-      toast.success("GitHub sign-in successful!");
+      const user = result.user;
+      const userData = user.reloadUserInfo;
+      const email = userData.email;
+      const provider = "github";
+      const providerId = user.providerId;
+      const emailVerified = userData.emailVerified;
+      const photoURL = userData.photoURL;
+      const displayName = userData.displayName;
+      await checkEmailInDatabase(
+        email,
+        provider,
+        providerId,
+        emailVerified,
+        photoURL,
+        displayName
+      );
+      window.location.replace("https://dchalios.vercel.app/dchalios-ai");
     } catch (error) {
       console.error("Error signing in with GitHub:", error);
       toast.error("Failed to sign in with GitHub. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkEmailInDatabase = async (
+    loggedEmail,
+    provider,
+    providerId,
+    isVerified,
+    profilePicture,
+    displayName
+  ) => {
+    try {
+      const { data } = await axios.get(`${backUrl}/signed-users`);
+      const socialUserResponse = await axios.get(`${backUrl}/social-users`);
+      const userExists = data.some(({ email }) => email === loggedEmail);
+      const socialUsersExist = socialUserResponse.data.some(
+        ({ email }) => email === loggedEmail
+      );
+      if (userExists || socialUsersExist) {
+        console.log("Email exists in the database:", loggedEmail);
+        toast.success(`Welcome Back ${displayName} !`);
+      } else {
+        console.log("Email does not exist in the database:", loggedEmail);
+        const newUser = {
+          email: loggedEmail,
+          provider,
+          providerId,
+          isVerified,
+          profilePicture,
+          displayName,
+        };
+        toast.success(`Welcome To Dchalios AI ${displayName} !`);
+        await axios.post(`${backUrl}/social-users`, newUser);
+      }
+    } catch (error) {
+      console.error("Error checking email in database:", error);
     }
   };
   return (
