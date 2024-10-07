@@ -23,7 +23,7 @@ function Home() {
   // Check for the user's session
 const checkSession = async () => {
 
-  const response = await fetch(`${VITE_BACKEND_URL}/session`, {
+  const response = await fetch(`${backendUrl}/session`, {
     credentials: "include", // Include cookies in the request
   });
   
