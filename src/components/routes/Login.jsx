@@ -39,7 +39,7 @@ function Login() {
     setLoading(true); // Disable button on first click
     try {
       if (emailValidation) {
-        const { data } = await axios.get(`${backUrl}/signed-users`);
+        const { data } = await axios.get(`${backUrl}/email-users`);
         const storedMail = data.some(({ email }) => email === emailData);
 
         if (storedMail) {
@@ -143,7 +143,7 @@ function Login() {
     displayName
   ) => {
     try {
-      const { data } = await axios.get(`${backUrl}/signed-users`);
+      const { data } = await axios.get(`${backUrl}/email-users`);
       const socialUserResponse = await axios.get(`${backUrl}/social-users`);
       const userExists = data.some(({ email }) => email === loggedEmail);
       const socialUsersExist = socialUserResponse.data.some(

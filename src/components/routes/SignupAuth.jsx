@@ -47,7 +47,7 @@ function SignupAuth() {
 
   const handleEmailSignup = async () => {
     try {
-      const { data } = await axios.get(`${backUrl}/signed-users`);
+      const { data } = await axios.get(`${backUrl}/email-users`);
       const enteredMail = email;
       console.log(data);
       const isEmailExist = data.some(({ email }) => enteredMail === email); // Fixed
@@ -57,7 +57,7 @@ function SignupAuth() {
         return;
       } else {
         await axios.post(
-          `${backUrl}/signed-users`,
+          `${backUrl}/email-users`,
           {
             email,
             password: passwordData,
