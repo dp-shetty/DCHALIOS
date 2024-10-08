@@ -19,13 +19,23 @@ function Home() {
   const outputRef = useRef(null);
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(window.innerWidth >= 768);
+  const [backJWT,setBackJwt] = useState()
 
   // Check for the user's session
 const checkSession = async () => {
 
-  const response = await fetch(`${backendUrl}/session`, {
+  try {
+    const {data} = axios.get(`${backendUrl}/session`, {
     credentials: "include", // Include cookies in the request
-  });
+  })
+  if(data){
+    setBackJwt(data?.JWT_Token)
+  }
+  } catch (error) {
+    console.error(error)
+  }
+
+  const response = await fetch();
   
   if (response.ok) {
     const userData = await response.json();

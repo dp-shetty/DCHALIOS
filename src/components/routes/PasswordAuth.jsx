@@ -8,6 +8,7 @@ import { signInWithPopup } from "firebase/auth";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 function PasswordAuth() {
   const [loginEmail, setLoginEmail] = useState(sessionStorage.getItem("loginEmail") || "");
@@ -15,14 +16,18 @@ function PasswordAuth() {
   const Navigation = useNavigate();
   const backUrl = import.meta.env.VITE_BACKEND_URL;
 
+
   const handleContinue = async () => {
     try {
-      const { data } = await axios.get(`${backUrl}/signed-users`);
-  
+      const { data } = await axios.get(`${backUrl}/email-users`);
+      const response = await axios.get(`${backUrl}/email-verify`, {
+        withCredentials: true, // Include cookies in the request
+      })
+
       // Compare the stored password with the entered password
       const storedPassword = data.some(({ password }) => password === passwordData);
   
-      if (storedPassword) {
+      if (storedPassword && response.data.authenticated) {
         toast.success("Authentication complete 🍻, Proceeding !!!", {
           style: {
             width: "25rem",
@@ -36,7 +41,7 @@ function PasswordAuth() {
           // Navigation("/dchalios-ai");
         }, 3000);
       } else {
-        toast.error("Password doesn't match");
+        toast.error("Authentication Failed");
       }
     } catch (error) {
       console.error("Error during authentication:", error);
