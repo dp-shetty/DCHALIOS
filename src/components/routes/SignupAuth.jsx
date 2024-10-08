@@ -47,7 +47,9 @@ function SignupAuth() {
 
   const handleEmailSignup = async () => {
     try {
-      const { data } = await axios.get(`${backUrl}/email-users`);
+      const { data } = await axios.get(`${backUrl}/email-users`, {
+        withCredentials: true, // Include credentials with the GET request
+      });
       const enteredMail = email;
       console.log(data);
       const isEmailExist = data.some(({ email }) => enteredMail === email); // Fixed
@@ -66,6 +68,7 @@ function SignupAuth() {
             headers: {
               "Content-Type": "application/json",
             },
+            withCredentials: true, // Include credentials with the GET request
           }
         );
         toast.success("Verification link sent to your email.", {
