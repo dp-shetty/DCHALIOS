@@ -35,15 +35,15 @@ const checkSession = async () => {
     console.error(error)
   }
 
-  const response = await fetch();
+  // const response = await fetch();
   
-  if (response.ok) {
-    const userData = await response.json();
-    console.log(userData)
-    // Proceed with authenticated actions
-  } else {
-    // Handle unauthenticated state
-  }
+  // if (response.ok) {
+  //   const userData = await response.json();
+  //   console.log(userData)
+  //   // Proceed with authenticated actions
+  // } else {
+  //   // Handle unauthenticated state
+  // }
 };
 
 // Call checkSession on app load
