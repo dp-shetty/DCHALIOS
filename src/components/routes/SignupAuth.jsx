@@ -19,6 +19,7 @@ function SignupAuth() {
   const [passwordData, setPasswordData] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const backUrl = import.meta.env.VITE_BACKEND_URL;
@@ -46,42 +47,49 @@ function SignupAuth() {
   };
 
   const handleEmailSignup = async () => {
+    setLoading(true);
     try {
-      const { data } = await axios.get(
-        `${backUrl}/email-users`
-      );
+      const { data } = await axios.get(`${backUrl}/email-users`);
       const enteredMail = email;
       console.log(data);
-      const isEmailExist = data.some(({ email }) => enteredMail === email); // Fixed
-      console.log(email, isEmailExist);
+      const isEmailExist = data.some(({ email }) => enteredMail === email);
+  
       if (isEmailExist) {
         toast.error("Email already exists, please login");
         return;
-      } else {
-        await axios.post(
-          `${backUrl}/email-users`,
-          {
-            email,
-            password: passwordData,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        toast.success("Verification link sent to your email.", {
-          duration: 3000,
-        });
-        window.location.replace(verfyFirstUrl);
       }
+  
+      // Post the email and password if the email does not exist
+      await axios.post(
+        `${backUrl}/email-users`,
+        {
+          email,
+          password: passwordData,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      toast.success("Verification link sent to your email.", {
+        duration: 3000,
+      });
+      window.location.replace(verfyFirstUrl);
     } catch (error) {
       console.error("Error during email signup:", error);
-      const errorMessage =
-        error.response?.data?.message;
-      toast.error(errorMessage);
+      // Customize the error message based on the response
+      if (error.response) {
+        toast.error(`Error: ${error.response.data.message || "Error Signing Up"}`);
+      } else {
+        toast.error("Error Signing Up");
+      }
+    }finally {
+      setLoading(false); // Re-enable button regardless of success or failure
     }
   };
+  
 
   return (
     <section className="w-screen h-screen flex bg-landing-bg-image bg-no-repeat bg-center bg-cover">
@@ -174,7 +182,7 @@ function SignupAuth() {
                 toast.error("Ensure password requirements are met.");
               }
             }}
-            disabled={!isPasswordValid}
+            disabled={!isPasswordValid || loading}
           />
           <div className="w-full flex items-center justify-center pb-3">
             <NavLink>Forget Password?</NavLink>
