@@ -78,7 +78,7 @@ function SignupAuth() {
     } catch (error) {
       console.error("Error during email signup:", error);
       const errorMessage =
-        error.response?.data?.message || "Failed to sign up. Please try again.";
+        error.response?.data?.message;
       toast.error(errorMessage);
     }
   };
