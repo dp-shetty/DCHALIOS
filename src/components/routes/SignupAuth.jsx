@@ -51,9 +51,8 @@ function SignupAuth() {
     try {
       const { data } = await axios.get(`${backUrl}/email-users`);
       const enteredMail = email;
-      console.log(data);
-      const isEmailExist = data.some(({ email }) => enteredMail === email);
-  
+      const isEmailExist = data?.some(({ email }) => enteredMail === email);
+
       if (isEmailExist) {
         toast.error("Email already exists, please login");
         return;
@@ -79,12 +78,7 @@ function SignupAuth() {
       window.location.replace(verfyFirstUrl);
     } catch (error) {
       console.error("Error during email signup:", error);
-      // Customize the error message based on the response
-      if (error.response) {
-        toast.error(`Error: ${error.response.data.message || "Error Signing Up"}`);
-      } else {
-        toast.error("Error Signing Up");
-      }
+      toast.error("Error Signing Up, try again later");
     }finally {
       setLoading(false); // Re-enable button regardless of success or failure
     }
