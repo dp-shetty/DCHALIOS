@@ -26,7 +26,7 @@ const checkSession = async () => {
 
   try {
     const {data} = axios.get(`${backendUrl}/session`, {
-    credentials: "include", // Include cookies in the request
+    withCredentials: true, // Include cookies in the request
   })
   if(data){
     setBackJwt(data?.JWT_Token)

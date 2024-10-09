@@ -19,7 +19,7 @@ function PasswordAuth() {
 
   const handleContinue = async () => {
     try {
-      const { data } = await axios.get(`${backUrl}/email-users`);
+      const { data } = await axios.get(`${backUrl}/email-users`,{withCredentials: true,});
       const response = await axios.get(`${backUrl}/email-verify`, {
         withCredentials: true, // Include cookies in the request
       })

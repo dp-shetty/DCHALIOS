@@ -49,7 +49,7 @@ function SignupAuth() {
   const handleEmailSignup = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`${backUrl}/email-users`);
+      const { data } = await axios.get(`${backUrl}/email-users`,{withCredentials: true});
       const enteredMail = email;
       const isEmailExist = data?.some(({ email }) => enteredMail === email);
 
@@ -57,7 +57,7 @@ function SignupAuth() {
         toast.error("Email already exists, please login");
         return;
       }
-  
+
       // Post the email and password if the email does not exist
       await axios.post(
         `${backUrl}/email-users`,
@@ -66,12 +66,13 @@ function SignupAuth() {
           password: passwordData,
         },
         {
+          withCredentials: true,
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
-  
+
       toast.success("Verification link sent to your email.", {
         duration: 3000,
       });
@@ -79,11 +80,10 @@ function SignupAuth() {
     } catch (error) {
       console.error("Error during email signup:", error);
       toast.error("Error Signing Up, try again later");
-    }finally {
+    } finally {
       setLoading(false); // Re-enable button regardless of success or failure
     }
   };
-  
 
   return (
     <section className="w-screen h-screen flex bg-landing-bg-image bg-no-repeat bg-center bg-cover">
