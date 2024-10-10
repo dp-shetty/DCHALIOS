@@ -60,6 +60,10 @@ function SessionLogin() {
       const emailFromToken = decoded.email;
       const userIdFromToken = decoded.id;
 
+
+      console.log("email entered :",emailData)
+      console.log("email from token",emailFromToken)
+
       if (emailData === emailFromToken) {
           const { data } = await axios.get(`${backendUrl}/email-users`, {
             withCredentials: true,
