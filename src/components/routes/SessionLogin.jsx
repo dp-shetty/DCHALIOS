@@ -10,7 +10,6 @@ import { jwtDecode } from "jwt-decode"; // Import jwt-decode to decode JWT
 function SessionLogin() {
   const [inputBorderColor, setInputBorderColor] = useState("white");
   const [loading, setLoading] = useState(false);
-  const [backJWT, setBackJwt] = useState("");
   const [emailData, setEmailData] = useState(""); // State for email data
   const [emailValidation, setEmailValidation] = useState(false); // State for email validation
   const navigate = useNavigate(); // Initialize navigate

@@ -5,14 +5,33 @@ import { SiGnuprivacyguard } from "react-icons/si";
 import LogoutSharpIcon from "@mui/icons-material/LogoutSharp";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode"; // Import jwt-decode to decode JWT tokens
 
 function Landing() {
   const Navigation = useNavigate();
 
   useEffect(() => {
     const token = Cookies.get("authToken");
+
     if (token) {
-      Navigation("/dchalios-ai");
+      try {
+        // Decode the JWT token to access its expiration date
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000; // Convert to seconds
+
+        // Check if the token is expired
+        if (decodedToken.exp < currentTime) {
+          Navigation("/login");
+        } else {
+          Navigation("/dchalios-ai");
+        }
+      } catch (error) {
+        console.error("Invalid token:", error);
+        Navigation("/login");
+      }
+    } else {
+      // No token found, navigate to login
+      Navigation("/login");
     }
   }, [Navigation]);
 
@@ -28,6 +47,7 @@ function Landing() {
     Navigation("/dchalios-ai");
   };
 
+
   return (
     <>
       <section className="w-screen h-screen flex bg-landing-bg-image bg-no-repeat bg-center bg-cover">
@@ -37,8 +57,7 @@ function Landing() {
               Welcome to D-CHALIOS AN AI 🤖
             </p>
             <p className="text-lg text-center text-black">
-              Unleash the Sharpness as 
-              Chanakya’s Wisdom, Radiant as the Sun’s
+              Unleash the Sharpness as Chanakya’s Wisdom, Radiant as the Sun’s
               Intensity
             </p>
           </div>
