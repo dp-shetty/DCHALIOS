@@ -67,11 +67,12 @@ function SessionLogin() {
 
           const userIdFromBackend = data[0]._id;
           if (userIdFromToken === userIdFromBackend) {
+            toast.success("Authentication Success")
             navigate("/dchalios-ai");
           }
       }
     } catch (error) {
-      console.error()
+      console.error(error)
       toast.error("Authentication Failed")
     }finally{
       setLoading(false)
