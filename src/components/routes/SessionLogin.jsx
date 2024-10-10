@@ -68,7 +68,12 @@ function SessionLogin() {
           const { data } = await axios.get(`${backendUrl}/email-users`, {
             withCredentials: true,
           });
+
           const userIdFromBackend = data._id;
+
+          console.log("userid from backend :",userIdFromBackend)
+          console.log("userid from token",userIdFromToken)
+          
           if (userIdFromToken === userIdFromBackend) {
             console.log("Navigating to /dchalios-ai");
             navigate("/dchalios-ai");
