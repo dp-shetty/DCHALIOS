@@ -70,6 +70,7 @@ function SessionLogin() {
           });
 
           console.log(data)
+          console.log("id from backend",data._id)
 
           const userIdFromBackend = data._id;
 
