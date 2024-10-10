@@ -6,6 +6,7 @@ import PasswordAuth from "./PasswordAuth";
 import Signup from "../Signup";
 import SignupAuth from "./SignupAuth";
 import Home from "../Home";
+import SessionLogin from "./SessionLogin";
 
 function MyRoutes() {
 
@@ -19,6 +20,7 @@ function MyRoutes() {
           <Route path="/signup" element={<Signup />}></Route>
           <Route path="/signup/auth" element={<SignupAuth />}></Route>
           <Route path="/dchalios-ai" element={<Home />}></Route>
+          <Route path="/session-login" element={<SessionLogin />}></Route>
         </Routes>
       </BrowserRouter>
     </>
