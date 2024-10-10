@@ -15,6 +15,8 @@ function SessionLogin() {
   const [emailValidation, setEmailValidation] = useState(false); // State for email validation
   const navigate = useNavigate(); // Initialize navigate
 
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   const getJWT = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/session`, {
