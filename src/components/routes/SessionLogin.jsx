@@ -13,7 +13,6 @@ function SessionLogin() {
   const [backJWT, setBackJwt] = useState("");
   const [emailData, setEmailData] = useState(""); // State for email data
   const [emailValidation, setEmailValidation] = useState(false); // State for email validation
-  const [isToastVisible, setIsToastVisible] = useState(false);
   const navigate = useNavigate(); // Initialize navigate
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -55,7 +54,6 @@ function SessionLogin() {
 
   const handleContinue = async () => {
     setLoading(true);
-    setIsToastVisible(true);
     try {
       if (!emailValidation) {
         toast.error("Please enter a valid email.");
@@ -74,9 +72,8 @@ function SessionLogin() {
         const userIdFromBackend = data[0]._id;
         if (userIdFromToken === userIdFromBackend) {
           toast.success("Authentication Success", {
-            onClose: () => setIsToastVisible(false),
+            onClose: () => navigate("/dchalios-ai"),
           });
-          isToastVisible ? null : navigate("/dchalios-ai");
         }
       } else {
         toast.error("Wrong Email Adress");
