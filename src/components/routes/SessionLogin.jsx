@@ -69,7 +69,8 @@ function SessionLogin() {
         const { data } = await axios.get(`${backendUrl}/email-users`, {
           withCredentials: true,
         });
-
+        console.log(data[0].id,"back id")
+        console.log(userIdFromToken,"token id")
         const userIdFromBackend = data[0]._id;
         if (userIdFromToken === userIdFromBackend) {
           toast.success("Authentication Success");
