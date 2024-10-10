@@ -11,7 +11,6 @@ import HistoryList from "./HistoryList";
 function Home() {
   const apiKey = import.meta.env.VITE_GOOGLE;
   const gModel = import.meta.env.VITE_GOOGLE_MODEL;
-  const backendUrl = import.meta.VITE_BACKEND_URL;
   const [model, setModel] = useState(null);
   const [inputQuery, setInputQuery] = useState("");
   const [finalContent, setFinalContent] = useState("");
@@ -19,38 +18,6 @@ function Home() {
   const outputRef = useRef(null);
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(window.innerWidth >= 768);
-  const [backJWT,setBackJwt] = useState()
-
-  // Check for the user's session
-const checkSession = async () => {
-
-  try {
-    const {data} = axios.get(`${backendUrl}/session`, {
-    withCredentials: true, // Include cookies in the request
-  })
-  if(data){
-    setBackJwt(data?.JWT_Token)
-  }
-  } catch (error) {
-    console.error(error)
-  }
-
-  // const response = await fetch();
-  
-  // if (response.ok) {
-  //   const userData = await response.json();
-  //   console.log(userData)
-  //   // Proceed with authenticated actions
-  // } else {
-  //   // Handle unauthenticated state
-  // }
-};
-
-// Call checkSession on app load
-useEffect(() => {
-  checkSession();
-}, []);
-
 
   useEffect(() => {
     const genAIInstance = new GoogleGenerativeAI(apiKey);
