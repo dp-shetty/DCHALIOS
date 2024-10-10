@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios"; // Ensure axios is imported
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { TextFieldComponent } from "../common/TextFieldComponent";
 import PortfolioButton from "../common/PortfolioButton";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
-// import jwtDecode from 'jsonwebtoken';
+import Cookies from "js-cookie"; // Import Cookies for cookie management
+import jwt_decode from "jwt-decode"; // Import jwt-decode to decode JWT
 
 function SessionLogin() {
   const [inputBorderColor, setInputBorderColor] = useState("white");
@@ -17,25 +18,23 @@ function SessionLogin() {
   const getJWT = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/session`, {
-        withCredentials: true,
+        withCredentials: true, // Ensure cookies are sent with the request
       });
-      if (data) {
-        setBackJwt(data.JWT_Token);
+      if (data && data.JWT_Token) {
+        Cookies.set("authToken", data.JWT_Token, { expires: 7 });
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching JWT:", error);
+      toast.error("Authentication failed!"); // Notify user of error
     }
   };
 
-  console.log(backJWT)
-
-  // Call checkSession on app load
+  // Call getJWT on component load
   useEffect(() => {
     getJWT();
   }, []);
 
   const handleChange = ({ target: { value } }) => {
-    // Simple email validation regex (you can adjust as needed)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (emailRegex.test(value)) {
       setEmailData(value);
@@ -48,6 +47,32 @@ function SessionLogin() {
   };
 
   const handleContinue = async () => {
+    setLoading(true);
+    try {
+      if (!emailValidation) {
+        toast.error("Please enter a valid email."); // Notify user if email is invalid
+        return;
+      }
+      const token = Cookies.get("authToken");
+      const decoded = jwt_decode(token);
+      const emailFromToken = decoded.email;
+      const userIdFromToken = decoded.id;
+
+      if (emailData === emailFromToken) {
+          const { data } = await axios.get(`${backendUrl}/email-users`, {
+            withCredentials: true,
+          });
+          const userIdFromBackend = data._id;
+          if (userIdFromToken === userIdFromBackend) {
+            navigate("/dchalios-ai");
+          }
+      }
+    } catch (error) {
+      console.error()
+      toast.error("Authentication Failed")
+    }finally{
+      setLoading(false)
+    }
   };
 
   return (
@@ -71,7 +96,7 @@ function SessionLogin() {
             className={`border pl-24 border-solid w-11/12 h-12 rounded-full flex items-center justify-between mob:w-11/12 mob:pl-8 mob:mt-4`}
             type={"button"}
             onClick={handleContinue}
-            // disabled={loading} // Disable button during loading
+            disabled={loading} // Disable button during loading
           />
         </div>
       </div>
