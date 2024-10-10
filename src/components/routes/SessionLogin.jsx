@@ -69,6 +69,8 @@ function SessionLogin() {
             withCredentials: true,
           });
 
+          console.log(data)
+
           const userIdFromBackend = data._id;
 
           console.log("userid from backend :",userIdFromBackend)
