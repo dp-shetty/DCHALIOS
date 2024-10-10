@@ -70,6 +70,8 @@ function SessionLogin() {
             toast.success("Authentication Success")
             navigate("/dchalios-ai");
           }
+      }else{
+        toast.error("Wrong Email Adress")
       }
     } catch (error) {
       console.error(error)
