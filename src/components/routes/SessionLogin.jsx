@@ -72,7 +72,11 @@ function SessionLogin() {
         const userIdFromBackend = data[0]._id;
         if (userIdFromToken === userIdFromBackend) {
           toast.success("Authentication Success", {
-            onClose: () => navigate("/dchalios-ai"),
+            onClose: () => {
+              console.log("Navigating to /dchalios-ai"); // Add this line
+              navigate("/dchalios-ai");
+            },
+            duration: 3000,
           });
         }
       } else {
