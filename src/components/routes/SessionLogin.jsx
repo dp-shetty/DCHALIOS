@@ -23,7 +23,7 @@ function SessionLogin() {
         withCredentials: true, // Ensure cookies are sent with the request
       });
       if (data && data.JWT_Token) {
-        Cookies.set("authToken", data.JWT_Token, { expires: 7 });
+        Cookies.set("authToken", data.JWT_Token,{ expires: 7, sameSite: "None", secure: true });
       }
     } catch (error) {
       console.error("Error fetching JWT:", error);
