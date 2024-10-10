@@ -12,7 +12,7 @@ function Landing() {
   useEffect(() => {
     const token = Cookies.get("authToken");
     if (token) {
-      navigate("/dchalios-ai");
+      Navigation("/dchalios-ai");
     }
   }, [Navigation]);
 
