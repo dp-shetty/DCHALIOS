@@ -5,7 +5,7 @@ import { TextFieldComponent } from "../common/TextFieldComponent";
 import PortfolioButton from "../common/PortfolioButton";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import Cookies from "js-cookie"; // Import Cookies for cookie management
-import {jwtDecode} from "jwt-decode"; // Import jwt-decode to decode JWT
+import { jwtDecode } from "jwt-decode"; // Import jwt-decode to decode JWT
 
 function SessionLogin() {
   const [inputBorderColor, setInputBorderColor] = useState("white");
@@ -13,6 +13,7 @@ function SessionLogin() {
   const [backJWT, setBackJwt] = useState("");
   const [emailData, setEmailData] = useState(""); // State for email data
   const [emailValidation, setEmailValidation] = useState(false); // State for email validation
+  const [isToastVisible, setIsToastVisible] = useState(false);
   const navigate = useNavigate(); // Initialize navigate
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -23,7 +24,11 @@ function SessionLogin() {
         withCredentials: true, // Ensure cookies are sent with the request
       });
       if (data && data.JWT_Token) {
-        Cookies.set("authToken", data.JWT_Token,{ expires: 7, sameSite: "None", secure: true });
+        Cookies.set("authToken", data.JWT_Token, {
+          expires: 7,
+          sameSite: "None",
+          secure: true,
+        });
       }
     } catch (error) {
       console.error("Error fetching JWT:", error);
@@ -50,9 +55,10 @@ function SessionLogin() {
 
   const handleContinue = async () => {
     setLoading(true);
+    setIsToastVisible(true);
     try {
       if (!emailValidation) {
-        toast.error("Please enter a valid email."); // Notify user if email is invalid
+        toast.error("Please enter a valid email.");
         return;
       }
       const token = Cookies.get("authToken");
@@ -61,25 +67,25 @@ function SessionLogin() {
       const userIdFromToken = decoded.id;
 
       if (emailData === emailFromToken) {
-          const { data } = await axios.get(`${backendUrl}/email-users`, {
-            withCredentials: true,
-          });
+        const { data } = await axios.get(`${backendUrl}/email-users`, {
+          withCredentials: true,
+        });
 
-          const userIdFromBackend = data[0]._id;
-          if (userIdFromToken === userIdFromBackend) {
-            toast.success("Authentication Success")
-            setTimeout(()=>{
-              navigate("/dchalios-ai");
-            },3000)
-          }
-      }else{
-        toast.error("Wrong Email Adress")
+        const userIdFromBackend = data[0]._id;
+        if (userIdFromToken === userIdFromBackend) {
+          toast.success("Authentication Success", {
+            onClose: () => setIsToastVisible(false),
+          });
+          isToastVisible ? null : navigate("/dchalios-ai");
+        }
+      } else {
+        toast.error("Wrong Email Adress");
       }
     } catch (error) {
-      console.error(error)
-      toast.error("Authentication Failed")
-    }finally{
-      setLoading(false)
+      console.error(error);
+      toast.error("Authentication Failed");
+    } finally {
+      setLoading(false);
     }
   };
 
