@@ -60,28 +60,14 @@ function SessionLogin() {
       const emailFromToken = decoded.email;
       const userIdFromToken = decoded.id;
 
-
-      console.log("email entered :",emailData)
-      console.log("email from token",emailFromToken)
-
       if (emailData === emailFromToken) {
           const { data } = await axios.get(`${backendUrl}/email-users`, {
             withCredentials: true,
           });
 
-          console.log(data)
-          console.log("id from backend",data._id)
-
-          const userIdFromBackend = data._id;
-
-          console.log("userid from backend :",userIdFromBackend)
-          console.log("userid from token",userIdFromToken)
-          
+          const userIdFromBackend = data[0]._id;
           if (userIdFromToken === userIdFromBackend) {
-            console.log("Navigating to /dchalios-ai");
             navigate("/dchalios-ai");
-          }else{
-            console.log("not navigating")
           }
       }
     } catch (error) {
