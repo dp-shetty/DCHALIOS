@@ -69,13 +69,15 @@ function SessionLogin() {
         const { data } = await axios.get(`${backendUrl}/email-users`, {
           withCredentials: true,
         });
-        console.log(data)
-        console.log(data[0].id,"back id")
-        console.log(userIdFromToken,"token id")
-        const userIdFromBackend = data[0]._id;
-        if (userIdFromToken === userIdFromBackend) {
-          toast.success("Authentication Success");
-            navigate("/dchalios-ai");
+        const isExist = data.find(({ email }) => email === emailData);
+        if (isExist) {
+          const userIdFromBackend = isExist._id;
+          if (userIdFromToken === userIdFromBackend) {
+            toast.success("Authentication Success");
+            setTimeout(() => {
+              navigate("/dchalios-ai");
+            }, 3500);
+          }
         }
       } else {
         toast.error("Wrong Email Adress");
