@@ -47,7 +47,7 @@ function PasswordAuth() {
           const expiryTimeInMillis = 5 * 60 * 1000; // 5 minutes in milliseconds
           const expiresInDays = expiryTimeInMillis / (1000 * 60 * 60 * 24); // Convert to days for js-cookie
           Cookies.set("authToken", data.JWT_Token, {
-            expires: expiresInDays,
+            expires: 7,
             secure: true,
             sameSite: "None",
             secure: true,

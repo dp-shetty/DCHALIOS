@@ -25,7 +25,7 @@ function SessionLogin() {
         const expiryTimeInMillis = 5 * 60 * 1000; // 5 minutes in milliseconds
         const expiresInDays = expiryTimeInMillis / (1000 * 60 * 60 * 24); // Convert to days for js-cookie
         Cookies.set("authToken", data.JWT_Token, {
-          expires: expiresInDays,
+          expires: 7,
           sameSite: "None",
           secure: true,
         });
@@ -73,9 +73,7 @@ function SessionLogin() {
         const userIdFromBackend = data[0]._id;
         if (userIdFromToken === userIdFromBackend) {
           toast.success("Authentication Success");
-          setTimeout(() => {
             navigate("/dchalios-ai");
-          }, 3500);
         }
       } else {
         toast.error("Wrong Email Adress");
