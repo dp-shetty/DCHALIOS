@@ -5,7 +5,7 @@ import { TextFieldComponent } from "../common/TextFieldComponent";
 import PortfolioButton from "../common/PortfolioButton";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import Cookies from "js-cookie"; // Import Cookies for cookie management
-import jwt_decode from "jwt-decode"; // Import jwt-decode to decode JWT
+import {jwtDecode} from "jwt-decode"; // Import jwt-decode to decode JWT
 
 function SessionLogin() {
   const [inputBorderColor, setInputBorderColor] = useState("white");
@@ -54,7 +54,7 @@ function SessionLogin() {
         return;
       }
       const token = Cookies.get("authToken");
-      const decoded = jwt_decode(token);
+      const decoded = jwtDecode(token);
       const emailFromToken = decoded.email;
       const userIdFromToken = decoded.id;
 
