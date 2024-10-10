@@ -71,13 +71,10 @@ function SessionLogin() {
 
         const userIdFromBackend = data[0]._id;
         if (userIdFromToken === userIdFromBackend) {
-          toast.success("Authentication Success", {
-            onClose: () => {
-              console.log("Navigating to /dchalios-ai"); // Add this line
-              navigate("/dchalios-ai");
-            },
-            duration: 3000,
-          });
+          toast.success("Authentication Success");
+          setTimeout(() => {
+            navigate("/dchalios-ai");
+          }, 3500);
         }
       } else {
         toast.error("Wrong Email Adress");
