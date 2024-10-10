@@ -4,9 +4,17 @@ import LoginIcon from "@mui/icons-material/Login";
 import { SiGnuprivacyguard } from "react-icons/si";
 import LogoutSharpIcon from "@mui/icons-material/LogoutSharp";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 function Landing() {
   const Navigation = useNavigate();
+
+  useEffect(() => {
+    const token = Cookies.get("authToken");
+    if (token) {
+      navigate("/dchalios-ai");
+    }
+  }, [Navigation]);
 
   const handleLogin = () => {
     Navigation("/login");
