@@ -66,7 +66,10 @@ function SessionLogin() {
           });
           const userIdFromBackend = data._id;
           if (userIdFromToken === userIdFromBackend) {
+            console.log("Navigating to /dchalios-ai");
             navigate("/dchalios-ai");
+          }else{
+            console.log("not navigating")
           }
       }
     } catch (error) {
