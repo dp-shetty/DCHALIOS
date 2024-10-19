@@ -9,10 +9,9 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
-// import { verifyPassword } from "../common/utils/bcrypt.js";
-
 
 function PasswordAuth() {
+  const navigate = useNavigate();
   const [loginEmail, setLoginEmail] = useState(
     sessionStorage.getItem("loginEmail") || ""
   );
@@ -27,7 +26,7 @@ function PasswordAuth() {
         withCredentials: true,
       });
 
-      const getloginEmail = data.some(({email})=>email === loginEmail)
+      const getloginEmail = data.some(({ email }) => email === loginEmail);
 
       if (getloginEmail) {
         const { data } = await axios.post(
