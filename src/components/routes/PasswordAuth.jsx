@@ -9,12 +9,15 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+// import { verifyPassword } from "../common/utils/bcrypt.js";
+
 
 function PasswordAuth() {
   const [loginEmail, setLoginEmail] = useState(
     sessionStorage.getItem("loginEmail") || ""
   );
   const [passwordData, setPasswordData] = useState("");
+  const [encryptedPasswordData, setEncryptedPasswordData] = useState("");
   const Navigation = useNavigate();
   const backUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -23,11 +26,10 @@ function PasswordAuth() {
       const { data } = await axios.get(`${backUrl}/email-users`, {
         withCredentials: true,
       });
-      const storedPassword = data.some(
-        ({ password }) => password === passwordData
-      );
 
-      if (storedPassword) {
+      const getloginEmail = data.some(({email})=>email === loginEmail)
+
+      if (getloginEmail) {
         const { data } = await axios.post(
           `${backUrl}/loginverify`,
           {
@@ -50,7 +52,6 @@ function PasswordAuth() {
             expires: 7,
             secure: true,
             sameSite: "None",
-            secure: true,
           });
           toast.success("Login successful!");
           setTimeout(() => {
