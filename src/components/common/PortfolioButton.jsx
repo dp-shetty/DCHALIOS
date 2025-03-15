@@ -9,6 +9,7 @@ function PortfolioButton({
   iconClassName,
   type,
   sx,
+  disabled,
 }) {
   return (
     <>
@@ -29,6 +30,7 @@ function PortfolioButton({
           onClick={onClick}
           className={`${className}`}
           style={sx}
+          disabled = {disabled}
         >
           {text && (
             <span className="text-center w-90% mob:w-10/12">{text}</span>

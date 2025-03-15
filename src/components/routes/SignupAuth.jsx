@@ -26,40 +26,29 @@ function SignupAuth() {
   const verfyFirstUrl = import.meta.env.VITE_VERIFY_START;
 
   const hasDigit = /\d/;
-  const hasTwoSpecialChars = (password) =>
-    (password.match(/\W/g) || []).length >= 2;
+  const hasTwoSpecialChars = (password) =>(password.match(/\W/g) || []).length >= 2;
   const hasLetter = /[a-zA-Z]/;
   const noSpaces = (password) => !/\s/.test(password);
+  const has8chars = (password) => password.length>7;
 
-  const validatePassword = () => {
+  const validatePassword = (value) => {
     const isValid =
-      hasDigit.test(passwordData) &&
-      hasTwoSpecialChars(passwordData) &&
-      hasLetter.test(passwordData) &&
-      noSpaces(passwordData);
-
-    setIsPasswordValid(isValid);
+      hasDigit.test(value) &&
+      hasTwoSpecialChars(value) &&
+      hasLetter.test(value) &&
+      noSpaces(value) &&
+      has8chars(value)
+      setIsPasswordValid(isValid);
   };
 
   const handlePasswordChange = ({ target: { value } }) => {
     setPasswordData(value);
-    validatePassword();
+    validatePassword(value);
   };
 
   const handleEmailSignup = async () => {
     setLoading(true);
-    try {
-      const { data } = await axios.get(`${backUrl}/email-users`,{withCredentials: true});
-      const enteredMail = email;
-      const isEmailExist = data?.some(({ email }) => enteredMail === email);
-
-      if (isEmailExist) {
-        toast.error("Email already exists, please login");
-        return;
-      }
-
-      // Post the email and password if the email does not exist
-      await axios.post(
+      axios.post(
         `${backUrl}/email-users`,
         {
           email,
@@ -71,18 +60,19 @@ function SignupAuth() {
             "Content-Type": "application/json",
           },
         }
-      );
-
-      toast.success("Verification link sent to your email.", {
-        duration: 3000,
-      });
-      window.location.replace(verfyFirstUrl);
-    } catch (error) {
-      console.error("Error during email signup:", error);
-      toast.error("Error Signing Up, try again later");
-    } finally {
-      setLoading(false); // Re-enable button regardless of success or failure
-    }
+      )
+      .then(()=>{
+        setLoading(true);
+        toast.success("Verification link sent to your email.", {
+          duration: 3000,
+        });
+        window.location.replace(verfyFirstUrl);
+      })
+      .catch((error)=>{
+        setLoading(false);
+        console.error("Error during email signup:", error);
+        toast.error("Error Signing Up, try again later");
+      })
   };
 
   return (
@@ -154,6 +144,13 @@ function SignupAuth() {
               >
                 {hasLetter.test(passwordData) ? "✓" : "✗"} Must contain at least
                 1 alphabetic character
+              </li>
+              <li
+                className={`flex items-center ${
+                  has8chars(passwordData) ? "text-green-500" : "text-red-500"
+                }`}
+              >
+                {has8chars(passwordData) ? "✓" : "✗"} Must Be more than 7 characters
               </li>
               <li
                 className={`flex items-center ${

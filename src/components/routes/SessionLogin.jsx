@@ -66,27 +66,33 @@ function SessionLogin() {
       const userIdFromToken = decoded.id;
 
       if (emailData === emailFromToken) {
-        const { data } = await axios.get(`${backendUrl}/email-users`, {
+        axios.get(`${backendUrl}/email-users`, {
           withCredentials: true,
-        });
-        const isExist = data.find(({ email }) => email === emailData);
-        if (isExist) {
-          const userIdFromBackend = isExist._id;
-          if (userIdFromToken === userIdFromBackend) {
-            toast.success("Authentication Success");
-            setTimeout(() => {
-              navigate("/dchalios-ai");
-            }, 3500);
+        })
+        .then(({data})=>{
+          setLoading(true);
+          const isExist = data.find(({ email }) => email === emailData);
+          if (isExist) {
+            const userIdFromBackend = isExist._id;
+            if (userIdFromToken === userIdFromBackend) {
+              toast.success("Authentication Success");
+              setTimeout(() => {
+                navigate("/dchalios-ai");
+              }, 3500);
+            }
           }
-        }
+        })
+        .catch(()=>{
+          setLoading(false);
+        })
       } else {
+        setLoading(false);
         toast.error("Wrong Email Adress");
       }
     } catch (error) {
+      setLoading(false);
       console.error(error);
       toast.error("Authentication Failed");
-    } finally {
-      setLoading(false);
     }
   };
 

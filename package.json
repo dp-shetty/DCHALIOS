@@ -20,6 +20,7 @@
     "@tailwindcss/typography": "^0.5.15",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
+    "caniuse-lite": "^1.0.30001704",
     "firebase": "^10.14.0",
     "formik": "^2.4.6",
     "js-cookie": "^3.0.5",

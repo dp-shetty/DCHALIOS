@@ -34,13 +34,27 @@ function Signup() {
     }
   };
 
-  const handleSignup = () => {
-    if (emailValidation) {
-      sessionStorage.setItem("signupEmail", emailData);
-      navigate("/signup/auth");
-    } else {
-      toast.error("Invalid email address!");
-    }
+  const handleSignup = async() => {
+    setLoading(true)
+    axios.get(`${backendUrl}/email-users`,{withCredentials: true})
+    .then(({data})=>{
+      setLoading(true)
+      const enteredMail = emailData;
+      const isEmailExist = data?.some(({ email }) => enteredMail === email);
+      if (isEmailExist) {
+        setLoading(false)
+        toast.error("Email already exists, please login");
+        return;
+      }else{
+        if (emailValidation) {
+          sessionStorage.setItem("signupEmail", emailData);
+          navigate("/signup/auth");
+        } else {
+          setLoading(false)
+          toast.error("Invalid email address!");
+        }
+      }
+    })
   };
 
   const handleGoogleSignIn = async () => {
@@ -203,6 +217,7 @@ function Signup() {
             className="border pl-24 w-11/12 h-12 rounded-full flex items-center justify-between mob:w-11/12"
             type="button"
             onClick={handleSignup}
+            disabled={loading}
           />
           <div className="border-b w-full flex justify-center items-center gap-8 pb-3">
             <p>Already a user?</p>

@@ -15,52 +15,70 @@ function PasswordAuth() {
   const [loginEmail, setLoginEmail] = useState(
     sessionStorage.getItem("loginEmail") || ""
   );
+  const [loading, setLoading] = useState(false); 
   const [passwordData, setPasswordData] = useState("");
   const [encryptedPasswordData, setEncryptedPasswordData] = useState("");
   const Navigation = useNavigate();
   const backUrl = import.meta.env.VITE_BACKEND_URL;
 
   const handleContinue = async () => {
+    if (loading) return;
+    setLoading(true);
     try {
-      const { data } = await axios.get(`${backUrl}/email-users`, {
+      axios.get(`${backUrl}/email-users`, {
         withCredentials: true,
-      });
-
-      const getloginEmail = data.some(({ email }) => email === loginEmail);
-
-      if (getloginEmail) {
-        const { data } = await axios.post(
-          `${backUrl}/loginverify`,
-          {
-            email: loginEmail,
-            password: passwordData,
-          },
-          {
-            withCredentials: true,
-            headers: {
-              "Content-Type": "application/json",
-            },
+      })
+      .then(({data})=>{
+        let loginEmailExist = data.some(({ email }) => email === loginEmail);
+        if (loginEmailExist) {
+          if(!passwordData){
+            toast.error("Please enter the password")
+            setLoading(false);
+          }else{
+            axios.post(
+              `${backUrl}/loginverify`,
+              {
+                email: loginEmail,
+                password: passwordData,
+              },
+              {
+                withCredentials: true,
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            )
+            .then(({data})=>{
+              // Check if the response contains the token
+              if (data.JWT_Token) {
+                setLoading(true);
+                const expiryTimeInMillis = 5 * 60 * 1000; // 5 minutes in milliseconds
+                const expiresInDays = expiryTimeInMillis / (1000 * 60 * 60 * 24); // Convert to days for js-cookie
+                Cookies.set("authToken", data.JWT_Token, {
+                  expires: 7,
+                  secure: true,
+                  sameSite: "None",
+                });
+                toast.success("Login successful!");
+                setTimeout(() => {
+                  navigate("/dchalios-ai");
+                }, 3500);
+              }else{
+                setLoading(false);
+                toast.error("Failed to authenticate.");
+              }
+            })
+            .catch(()=>{
+              setLoading(false);
+              toast.error("Failed to perform action.");
+            })
           }
-        );
-
-        // Check if the response contains the token
-        if (data.JWT_Token) {
-          const expiryTimeInMillis = 5 * 60 * 1000; // 5 minutes in milliseconds
-          const expiresInDays = expiryTimeInMillis / (1000 * 60 * 60 * 24); // Convert to days for js-cookie
-          Cookies.set("authToken", data.JWT_Token, {
-            expires: 7,
-            secure: true,
-            sameSite: "None",
-          });
-          toast.success("Login successful!");
-          setTimeout(() => {
-            navigate("/dchalios-ai");
-          }, 3500);
         }
-      }
+      })
     } catch (error) {
+      setLoading(false);
       console.error("Error during authentication:", error);
-      toast.error("Failed to authenticate.");
+      toast.error("Error during authentication");
     }
   };
 
@@ -70,7 +88,7 @@ function PasswordAuth() {
       return;
     }
     try {
-      const response = await axios.post(`${backUrl}/reset-password`, {
+      const response = await axios.post(`${backUrl}/reset-password/confirm`, {
         email: loginEmail,
       });
       toast.success(response.data.message);
@@ -111,6 +129,7 @@ function PasswordAuth() {
             text="CONTINUE"
             className={`border pl-24 border-solid w-11/12 h-12 rounded-full flex items-center justify-between mob:w-11/12 mob:pl-8 mob:mt-4`}
             type={"button"}
+            disabled={loading}
             onClick={handleContinue}
           />
           <div className="w-full flex items-center justify-center mb-3">

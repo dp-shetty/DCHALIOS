@@ -39,35 +39,36 @@ function Login() {
     setLoading(true); // Disable button on first click
     try {
       if (emailValidation) {
-        const { data } = await axios.get(`${backUrl}/email-users`,{withCredentials: true});
-        const storedMail = data.some(({ email }) => email === emailData);
+        axios.get(`${backUrl}/email-users`,{withCredentials: true}).then(({data})=>{
+          const storedMail = data.some(({ email }) => email === emailData);
 
-        if (storedMail) {
-          sessionStorage.setItem("loginEmail", emailData);
-          toast.success("Email found. Proceeding to authentication", {
-            style: {
-              width: "25rem",
-              maxWidth: "800px",
-            },
-            duration: 3000,
-          });
-
-          setTimeout(() => {
-            Navigation("/login/auth");
-            setLoading(false); // Re-enable button after navigation
-          }, 5000);
-        } else {
-          toast.error("Email not found. Please sign up.");
-          setLoading(false); // Re-enable button after toast
-        }
+          if (storedMail) {
+            sessionStorage.setItem("loginEmail", emailData);
+            toast.success("Email found. Proceeding to authentication", {
+              style: {
+                width: "25rem",
+                maxWidth: "800px",
+              },
+              duration: 3000,
+            });
+  
+            setTimeout(() => {
+              Navigation("/login/auth");
+              setLoading(false); // Re-enable button after navigation
+            }, 5000);
+          } else {
+            toast.error("Email not found. Please sign up.");
+            setLoading(false); // Re-enable button after toast
+          }
+        }).catch(()=>{
+          setLoading(false);
+        })
       }
     } catch (error) {
       console.error("Error fetching users:", error);
       toast.error("Failed to retrieve user data.");
       setLoading(false); // Re-enable button on error
-    } finally{
-      setLoading(false);
-    }
+    } 
   };
 
   const handleSignup = () => {
